@@ -12,7 +12,7 @@ app.post("/webhook/incoming", (req, res) => {
 
   console.log(`Received message from ${data.from}: ${data.body}`);
   // Process the incoming message here
-  res.send(200).json({ status: "success" });
+  res.send(200).json({ status: "success", data });
 });
 
 // Endpoint to send outgoing messages

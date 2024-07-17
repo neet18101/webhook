@@ -1,31 +1,29 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 
 const app = express();
 const port = 3000;
 
 // Middleware to parse JSON bodies
-app.use(bodyParser.json());
+app.use(express.json());
 
 // Endpoint to receive incoming messages
 app.post("/webhook/incoming", (req, res) => {
   const data = req.body;
+
   console.log(`Received message from ${data.from}: ${data.body}`);
   // Process the incoming message here
-  res.status(200).json({ status: "success" });
+  res.send(200).json({ status: "success" });
 });
 
 // Endpoint to send outgoing messages
-app.post("/webhook/outgoing", (req, res) => {
+app.post("/webhook/outgoing", async (req, res) => {
   const { to, body } = req.body;
-  // Logic to send the message via Sendplus
-  sendOutgoingMessage(to, body)
-    .then((response) => {
-      res.status(200).json({ status: "success", response });
-    })
-    .catch((error) => {
-      res.status(500).json({ status: "error", error });
-    });
+  try {
+    const response = await sendOutgoingMessage(to, body);
+    res.status(200).json({ status: "success", response });
+  } catch (error) {
+    res.status(500).json({ status: "error", error: error.message });
+  }
 });
 
 // Function to send outgoing message

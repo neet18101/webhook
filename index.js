@@ -7,12 +7,12 @@ const port = 3000;
 app.use(express.json());
 
 // Endpoint to receive incoming messages
-app.post("/webhook/incoming", (req, res) => {
+app.get("/webhook/incoming", (req, res) => {
   const data = req.body;
 
   console.log(`Received message from ${data.from}: ${data.body}`);
   // Process the incoming message here
-  res.send(200).json({ status: "success", data });
+  return res.send(200).json({ status: "success", data });
 });
 
 // Endpoint to send outgoing messages

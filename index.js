@@ -1,22 +1,41 @@
 const express = require("express");
-
 const app = express();
-const port = 3000;
-
-// Middleware to parse JSON bodies
 app.use(express.json());
 
+// Initialize Supabase client
+const { createClient } = require("@supabase/supabase-js");
+const supabaseUrl = "https://ynbhzepfkimfgmmsumbb.supabase.co";
+const supabaseKey =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InluYmh6ZXBma2ltZmdtbXN1bWJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTg0NDc0NDAsImV4cCI6MjAxNDAyMzQ0MH0.vgtE8S-eEMykRsZBCKCpQ5E3pm49YWenakZWb4dNiG4";
+const supabase = createClient(supabaseUrl, supabaseKey);
+
 // Endpoint to receive incoming messages
-app.post("/webhook/incoming", (req, res) => {
+app.post("/webhook/incoming", async (req, res) => {
   const data = req.body;
+  //   console.log(data[0])
 
   const username = data[0].contact.username;
   const lastMessage = data[0].contact.last_message;
   console.log("Username:", username);
   console.log("Last Message:", lastMessage);
 
-  // Process the incoming message here
-  res.status(200).json({ status: "success", data });
+  // Check if the username and last message exist in the Supabase database
+  const { data: user, error } = await supabase
+    .from("channels")
+    .select("*")
+    .eq("channel_name", username)
+    .eq("otp", lastMessage);
+  if (error) {
+    console.log("Error fetching user:", error.message);
+    return res.status(500).json({ status: "error", error: error.message });
+  }
+
+  if (user) {
+    // Process the incoming message here
+    res
+      .status(200)
+      .json({ status: "success", data, message: "User found in database" });
+  }
 });
 
 // Endpoint to send outgoing messages
@@ -30,18 +49,14 @@ app.post("/webhook/outgoing", async (req, res) => {
   }
 });
 
-// Function to send outgoing message
-function sendOutgoingMessage(to, body) {
-  return new Promise((resolve, reject) => {
-    // Replace with your Sendplus API integration
-    console.log(`Sending message to ${to}: ${body}`);
-    // Simulate async operation
-    setTimeout(() => {
-      resolve({ message: "Message sent successfully" });
-    }, 1000);
-  });
-}
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
+
+// Mock function to send a message to Instagram
+async function sendOutgoingMessage(to, body) {
+  // Replace with your actual implementation to send a message to Instagram
+  console.log(`Sending message to ${to}: ${body}`);
+  return { to, body };
+}

@@ -7,7 +7,7 @@ const port = 3000;
 app.use(express.json());
 
 // Endpoint to receive incoming messages
-app.get("/webhook/incoming", (req, res) => {
+app.post("/webhook/incoming", (req, res) => {
   const data = req.body;
 
   console.log(`Received message from ${data}: ${data}`);

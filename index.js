@@ -10,9 +10,9 @@ app.use(express.json());
 app.get("/webhook/incoming", (req, res) => {
   const data = req.body;
 
-  console.log(`Received message from ${data.from}: ${data.body}`);
+  console.log(`Received message from ${data}: ${data}`);
   // Process the incoming message here
-  return res.send(200).json({ status: "success", data });
+  res.send(200).json({ status: "success", data });
 });
 
 // Endpoint to send outgoing messages

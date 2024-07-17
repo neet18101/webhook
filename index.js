@@ -13,31 +13,30 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 app.post("/webhook/incoming", async (req, res) => {
   const data = req.body;
   //   console.log(data[0])
-  console.log(JSON.stringify(data));
 
-  // const username = data[0].contact.username;
-  // const lastMessage = data[0].contact.last_message;
-  // console.log("Username:", username);
-  // console.log("Last Message:", lastMessage);
+  const username = data[0].contact.username;
+  const lastMessage = data[0].contact.last_message;
+  console.log("Username:", username);
+  console.log("Last Message:", lastMessage);
 
-  // // Check if the username and last message exist in the Supabase database
-  // const { data: user, error } = await supabase
-  //   .from("channels")
-  //   .select("*")
-  //   .eq("channel_name", username)
-  //   .eq("otp", lastMessage);
-  // if (error) {
-  //   console.log("Error fetching user:", error.message);
-  //   return res.status(500).json({ status: "error", error: error.message });
-  // }
+  // Check if the username and last message exist in the Supabase database
+  const { data: user, error } = await supabase
+    .from("channels")
+    .select("*")
+    .eq("channel_name", username)
+    .eq("otp", lastMessage);
+  if (error) {
+    console.log("Error fetching user:", error.message);
+    return res.status(500).json({ status: "error", error: error.message });
+  }
 
-  // if (user) {
-  //   // Process the incoming message here
-  //   console.log(JSON.stringify(user));
-  res
-    .status(200)
-    .json({ status: "success", data, message: "User found in database" });
-  // }
+  if (data) {
+    // Process the incoming message here
+    console.log(JSON.stringify(user));
+    res
+      .status(200)
+      .json({ status: "success", data, message: "User found in database" });
+  }
 });
 
 // Endpoint to send outgoing messages

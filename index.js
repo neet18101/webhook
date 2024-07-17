@@ -10,7 +10,11 @@ app.use(express.json());
 app.post("/webhook/incoming", (req, res) => {
   const data = req.body;
 
-  console.log(`Received message from ${JSON.stringify(data, null, 2)}: ${data.body}`);
+  const username = data[0].contact.username;
+  const lastMessage = data[0].contact.last_message;
+  console.log("Username:", username);
+  console.log("Last Message:", lastMessage);
+
   // Process the incoming message here
   res.status(200).json({ status: "success", data });
 });

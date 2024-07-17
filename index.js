@@ -32,6 +32,7 @@ app.post("/webhook/incoming", async (req, res) => {
 
   if (user) {
     // Process the incoming message here
+    console.log(JSON.stringify(user));
     res
       .status(200)
       .json({ status: "success", data, message: "User found in database" });

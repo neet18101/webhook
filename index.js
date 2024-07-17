@@ -10,7 +10,7 @@ app.use(express.json());
 app.post("/webhook/incoming", (req, res) => {
   const data = req.body;
 
-  console.log(`Received message from ${data}: ${data}`);
+  console.log(`Received message from ${JSON.stringify(data, null, 2)}: ${data.body}`);
   // Process the incoming message here
   res.status(200).json({ status: "success", data });
 });

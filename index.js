@@ -14,12 +14,12 @@ app.post("/webhook/incoming", async (req, res) => {
   //   console.log(data[0])
   // console.log(data);
   const data = req.body;
-  console.log(data, "webhook");
+  // console.log(data, "webhook");
 
-  // const username = data[0]?.contact.username;
-  // const lastMessage = data[0]?.contact.last_message;
-  // console.log("Username:", username);
-  // console.log("Last Message:", lastMessage);
+  const username = data[0]?.contact.username;
+  const lastMessage = data[0]?.contact.last_message;
+  console.log("Username:", username);
+  console.log("Last Message:", lastMessage);
   return res.send().status(200);
 
   // Check if the username and last message exist in the Supabase database

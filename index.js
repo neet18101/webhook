@@ -39,7 +39,7 @@ app.post("/webhook/incoming", async (req, res) => {
             Headers: {
               "Content-Type": "application/json",
               Authorization:
-                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImFjNzQyMDNkMmM0OGFmOGQwNTE3ZDJmOWE3NDEwZDFjYWQ4MTk4NzUwMTQyNzBmY2ZiYjJlY2JhYWU2YzUzNWRiNmMwZDJlNjQ4MDQ0ZTFmIn0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6ImFjNzQyMDNkMmM0OGFmOGQwNTE3ZDJmOWE3NDEwZDFjYWQ4MTk4NzUwMTQyNzBmY2ZiYjJlY2JhYWU2YzUzNWRiNmMwZDJlNjQ4MDQ0ZTFmIiwiaWF0IjoxNzIxMjk1Nzg5LCJuYmYiOjE3MjEyOTU3ODksImV4cCI6MTcyMTI5OTM4OSwic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.CA473Pr5PnHQrErDZ4JXeC2qI7ofUOseK74ZRdQqDifDAvdY7Kz_pQgNNlyawjAmBQMoc1SHzuL0K3f9S_CefUJKTiQkBNaPZXklGC8IF4IJWkvYbdBW7NS4L7G50sKXcKfphVyncdM1f9f4dqZCAefvWpkqf1wjFtSOytUXrIJUmf-lILZ6XhykY6ARnzBlwEsDNHF6AOhJ-gRHprUwLHGTrDQwsP2N3iSUimC8W-19HxFzsdz_Eemp2L2C0JNUPe_0H6BGzaZYaycufktHio2OUHsm-SZp-1WIWGgPn5JybJzqZDbX0ZinDzptGIfVmbfCqUKDX4ZF0FHnm2kmkg",
+                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImI1YWU2NjRhZDc1YmJiY2FmOWIwMjA3YzI0MzM2NzU0NWU0NDhkZjE1ZjBkMDA1NTU3NDUyZDEzNWY1MWE3YjJjZjMxZGEyZGI3ZWZjNzhmIn0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6ImI1YWU2NjRhZDc1YmJiY2FmOWIwMjA3YzI0MzM2NzU0NWU0NDhkZjE1ZjBkMDA1NTU3NDUyZDEzNWY1MWE3YjJjZjMxZGEyZGI3ZWZjNzhmIiwiaWF0IjoxNzIxMjk5MzMzLCJuYmYiOjE3MjEyOTkzMzMsImV4cCI6MTcyMTMwMjkzMywic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.vRg_Fxm2_5guvkOqj0AppHW0qvwrOfwx1T52OQW_U8Uva5-btZrZu37CU5AnslqYbkZ_7zEbo-vu1yTxJZto6Yx6FC5lbUtNwanCvSF8qQwH5ofpi7JjUk_iVP8tO6a00NzvZwQM8aa-Jp0te2J7v1Q946gXbsYIZb5wl7dto-ZWGRJYwOmvMU1cjKvORoO-oefcZsEFZYIl4dhBQEY2mctHGvS3FkC1NDvEsE1FpOw33OdfSHceSfVbUHpGi2qevDRJtVUddM8S-Q3Z1UFIscK3sigbYEbJeI70nxJKJKYpxrvgyQU1ke59_gsWR2-jP7dVpso79ddJOkIUW7dwGQ",
             },
             body: {
               contact_id: contact_id,
@@ -62,16 +62,16 @@ app.post("/webhook/incoming", async (req, res) => {
   }
   // Check if the username and last message exist in the Supabase database
 
-  if (error) {
-    console.log("Error fetching user:", error.message);
-    return res.status(500).json({ status: "error", error: error.message });
-  }
+  // if (error) {
+  //   console.log("Error fetching user:", error.message);
+  //   return res.status(500).json({ status: "error", error: error.message });
+  // }
 
   // Process the incoming message here
-  console.log("User found:", JSON.stringify(user));
-  return res
-    .status(200)
-    .json({ status: "success", data: user, message: "User found in database" });
+  // console.log("User found:", JSON.stringify(user));
+  // return res
+  //   .status(200)
+  //   .json({ status: "success", data: user, message: "User found in database" });
 });
 
 // Endpoint to send outgoing messages

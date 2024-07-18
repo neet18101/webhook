@@ -5,7 +5,7 @@ app.use(express.json());
 
 // Initialize Supabase client
 const { createClient } = require("@supabase/supabase-js");
-const { default: axios } = require("axios");
+
 const supabaseUrl = "https://ynbhzepfkimfgmmsumbb.supabase.co";
 const supabaseKey =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InluYmh6ZXBma2ltZmdtbXN1bWJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTg0NDc0NDAsImV4cCI6MjAxNDAyMzQ0MH0.vgtE8S-eEMykRsZBCKCpQ5E3pm49YWenakZWb4dNiG4";

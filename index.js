@@ -39,7 +39,7 @@ const getToken = async () => {
     console.error("Error obtaining access token:", error);
   }
 };
-// console.log(getToken());
+console.log(getToken());
 // Endpoint to receive incoming messages
 app.post("/webhook/incoming", async (req, res) => {
   const data = req.body;
@@ -80,7 +80,7 @@ app.post("/webhook/incoming", async (req, res) => {
         postData,
         {
           headers: {
-            Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImI1YWU2NjRhZDc1YmJiY2FmOWIwMjA3YzI0MzM2NzU0NWU0NDhkZjE1ZjBkMDA1NTU3NDUyZDEzNWY1MWE3YjJjZjMxZGEyZGI3ZWZjNzhmIn0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6ImI1YWU2NjRhZDc1YmJiY2FmOWIwMjA3YzI0MzM2NzU0NWU0NDhkZjE1ZjBkMDA1NTU3NDUyZDEzNWY1MWE3YjJjZjMxZGEyZGI3ZWZjNzhmIiwiaWF0IjoxNzIxMjk5MzMzLCJuYmYiOjE3MjEyOTkzMzMsImV4cCI6MTcyMTMwMjkzMywic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.vRg_Fxm2_5guvkOqj0AppHW0qvwrOfwx1T52OQW_U8Uva5-btZrZu37CU5AnslqYbkZ_7zEbo-vu1yTxJZto6Yx6FC5lbUtNwanCvSF8qQwH5ofpi7JjUk_iVP8tO6a00NzvZwQM8aa-Jp0te2J7v1Q946gXbsYIZb5wl7dto-ZWGRJYwOmvMU1cjKvORoO-oefcZsEFZYIl4dhBQEY2mctHGvS3FkC1NDvEsE1FpOw33OdfSHceSfVbUHpGi2qevDRJtVUddM8S-Q3Z1UFIscK3sigbYEbJeI70nxJKJKYpxrvgyQU1ke59_gsWR2-jP7dVpso79ddJOkIUW7dwGQ`,
+            Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjllNWE1NzY3OTIxZGI1Njk0ZGJhNDkyZGM4YWZlNzNhZTEzZjJmNjBkZmJlYTJhYjA3ZDVkZWNjNGQ4MDU5NTgwMzRkZGI5Mjk2MzUxZWQzIn0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6IjllNWE1NzY3OTIxZGI1Njk0ZGJhNDkyZGM4YWZlNzNhZTEzZjJmNjBkZmJlYTJhYjA3ZDVkZWNjNGQ4MDU5NTgwMzRkZGI5Mjk2MzUxZWQzIiwiaWF0IjoxNzIxMzAzMzk4LCJuYmYiOjE3MjEzMDMzOTgsImV4cCI6MTcyMTMwNjk5OCwic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.vKLCCqOIVbguvVOZoyLTf40FfzOeOrI63Dvtu-EGUld2kXKRaPvU_gBwCekdRqtuSaExfHnAxFJ-l8HWydUxnZ9GTUm5tutxq0UdUKWkJBkJSzWagzyxMocqceNyfumQU1PIZotfHLLsLToGYwBhoVrozpjSDUYUdepRuk12wXqVRyNUksSfEkGHFrhNMVwpm1TJsu1OSwljm_2YtkIdmX7_jM-oaj_Ej-QC2v84mEehzOxc05yK8aycwLRJIM62PNR3dIhUY90hsceJ-gmMAvD_rMp8jUXBuO0CxQf2Mj6yHHMbu8OBoNXG8qcF-PAPChkoYRH2HoXNPpUE20KV7Q`,
             "Content-Type": "application/json",
           },
         }

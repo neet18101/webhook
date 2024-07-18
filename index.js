@@ -41,13 +41,34 @@ const getToken = async () => {
   }
 };
 
-// Endpoint to receive incoming messages
-app.post("/webhook/incoming", async (req, res) => {
-  const data = req.body;
+async function callAnotherApi(userData) {
+  console.log(userData, "neet");
+  // try {
+  //   const response = await axios.post('https://example.com/another-api-endpoint', userData);
+  //   console.log('Response from another API:', response.data);
+  // } catch (error) {
+  //   console.error('Error calling another API:', error);
+  // }
+}
+
+// store data from webhook
+function storeData(data) {
   const username = data[0]?.contact.username;
   const lastMessage = data[0]?.contact.last_message;
   const contact_id = data[0]?.contact.id;
-  console.log(username, lastMessage, contact_id, "neet");
+
+  return { username, lastMessage, contact_id };
+}
+
+// Endpoint to receive incoming messages
+app.post("/webhook/incoming", async (req, res) => {
+  const data = req.body;
+  const userData = storeData(data);
+
+  console.log(userData, "neet");
+
+  // Call another API with the stored data
+  await callAnotherApi(userData);
 
   return res.sendStatus(200); // Corrected to use sendStatus
 });

@@ -44,7 +44,6 @@ console.log(getToken());
 app.post("/webhook/incoming", async (req, res) => {
   const data = req.body;
   // console.log(data, "webhook");
-
   const username = data[0]?.contact.username;
   const lastMessage = data[0]?.contact.last_message;
   const contact_id = data[0]?.contact.id;
@@ -93,6 +92,11 @@ app.post("/webhook/incoming", async (req, res) => {
               },
             }
           );
+          return res.status(200).json({
+            status: "success",
+            data: sendResponse.data,
+            message: "Message sent successfully",
+          });
 
           console.log("SendPulse response:", sendResponse.data);
           res.status(200).send({ status: "success", data: sendResponse.data });
@@ -107,7 +111,7 @@ app.post("/webhook/incoming", async (req, res) => {
         }
       } else {
         // User found in the database
-        res.status(200).json({
+        return res.status(200).json({
           status: "success",
           data: user,
           message: "User found in database",
@@ -115,7 +119,7 @@ app.post("/webhook/incoming", async (req, res) => {
       }
     } catch (supabaseError) {
       console.error("Error querying Supabase:", supabaseError.message);
-      res
+      return res
         .status(500)
         .json({ status: "error", message: "Database query failed" });
     }

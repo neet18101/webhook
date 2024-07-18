@@ -80,7 +80,7 @@ async function callAnotherApi(userData) {
             },
           }
         );
-        return sendResponse.data
+        return true
       }
       return 0;
     } else {
@@ -115,7 +115,9 @@ app.post("/webhook/incoming", async (req, res) => {
 
     // Call another API with the stored data
     const a = await callAnotherApi(userData);
-    console.log(a);
+    if(a){
+      return res.send("message gone")
+    }
     return res.sendStatus(200); // Corrected to use sendStatus
   } catch (error) {
     console.log(error);

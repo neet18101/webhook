@@ -36,7 +36,7 @@ app.post("/webhook/incoming", async (req, res) => {
 
   // Process the incoming message here
   console.log("User found:", JSON.stringify(user));
-  return res.status(200).json({ status: "success", data: user, message: "User found in database" });
+  return res.sendStatus(200).json({ status: "success", data: user, message: "User found in database" });
 });
 
 // Endpoint to send outgoing messages

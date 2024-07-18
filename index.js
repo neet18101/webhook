@@ -11,10 +11,11 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Endpoint to receive incoming messages
 app.post("/webhook/incoming", async (req, res) => {
-  const data = req.body;
   //   console.log(data[0])
   // console.log(data);
   try {
+    const data = req.body;
+    console.log(JSON.stringify(data));
     const username = data[0]?.contact.username;
     const lastMessage = data[0]?.contact.last_message;
     console.log("Username:", username);

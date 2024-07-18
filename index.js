@@ -18,6 +18,7 @@ app.post("/webhook/incoming", async (req, res) => {
   const lastMessage = data[0].contact.last_message;
   console.log("Username:", username);
   console.log("Last Message:", lastMessage);
+  return res.status(200);
 
   // Check if the username and last message exist in the Supabase database
   const { data: user, error } = await supabase
@@ -36,7 +37,9 @@ app.post("/webhook/incoming", async (req, res) => {
 
   // Process the incoming message here
   console.log("User found:", JSON.stringify(user));
-  return res.sendStatus(200).json({ status: "success", data: user, message: "User found in database" });
+  return res
+    .status(200)
+    .json({ status: "success", data: user, message: "User found in database" });
 });
 
 // Endpoint to send outgoing messages

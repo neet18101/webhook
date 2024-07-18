@@ -14,6 +14,7 @@ app.post("/webhook/incoming", async (req, res) => {
   //   console.log(data[0])
   // console.log(data);
   const data = req.body;
+  console.log(data)
   console.log(JSON.stringify(data));
 
   // const username = data[0]?.contact.username;

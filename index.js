@@ -72,24 +72,25 @@ async function callAnotherApi(userData) {
               },
             },
           ],
+          sent_by: "my_system" // Custom field to indicate the source
         };
 
         console.log("postData to be sent to SendPulse:", postData);
 
-        
+        const sendPulseAccessToken = await getToken();
+        const sendResponse = await axios.post(
+          "https://api.sendpulse.com/instagram/contacts/send",
+          postData,
+          {
+            headers: {
+              Authorization: `Bearer ${sendPulseAccessToken}`,
+              "Content-Type": "application/json",
+            },
+            timeout: 10000 // 10 seconds timeout
+          }
+        );
 
-        // const sendResponse = await axios.post(
-        //   "https://api.sendpulse.com/instagram/contacts/send",
-        //   postData,
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImU1NTU1Y2FiMDg1MjIzMTZjMDA0YTUzYmM2OTYzYmVkYzUzM2ExMDhkZDk4NGYzMjc4NWIyZTBiMThkMjljYzBhYzcyNjBiNjFhNWFjMjUzIn0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6ImU1NTU1Y2FiMDg1MjIzMTZjMDA0YTUzYmM2OTYzYmVkYzUzM2ExMDhkZDk4NGYzMjc4NWIyZTBiMThkMjljYzBhYzcyNjBiNjFhNWFjMjUzIiwiaWF0IjoxNzIxMzI1ODU3LCJuYmYiOjE3MjEzMjU4NTcsImV4cCI6MTcyMTMyOTQ1Nywic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.hI4XVXA4kw0IP9QnzmRdQDsDmrjm_mdF5aEs_8EBlB_AwSjdA740-QJ6gyvRCs0fmSvub_zxXW3p1H4ZkDB_W7Fg6qbeI0CYc-gI0S-ro3wx017vuD2yD_G5RVxr2P6zefhlAA1Yl6z6SMOrYgVjGR8UL5MfE1KnQ4mNFZX8c2QL0BeANINRQIJhiIkk49176W7CypxTAucsW6gFdJHtltUE52ErZzF3DCa2XJrKTC96B24oq1Uld8cBoK535qeVTZ7tNH9ptwldOsVnyZSGzODD5whCb_mxn_229oWZpWhUVAV_lfyiuGhHbSQ9B5DE8rKymQuoX8r7zB6gMNdMbA`, // Replace with your actual access token
-        //       "Content-Type": "application/json",
-        //     },
-        //   }
-        // );
-
-        // console.log("Response from SendPulse API:", sendResponse.data);
+        console.log("Response from SendPulse API:", sendResponse.data);
         return true;
       }
 
@@ -109,8 +110,9 @@ function storeData(data) {
   const username = data[0]?.contact.username;
   const lastMessage = data[0]?.contact.last_message;
   const contact_id = data[0]?.contact.id;
+  const sent_by = data[0]?.contact.sent_by;
 
-  return { username, lastMessage, contact_id };
+  return { username, lastMessage, contact_id, sent_by };
 }
 
 // Endpoint to receive incoming messages
@@ -119,6 +121,12 @@ app.post("/webhook/incoming", async (req, res) => {
     const data = req.body;
     const userData = storeData(data);
     console.log("Received userData:", userData);
+
+    // Ignore requests sent by your own system
+    if (userData.sent_by === "my_system") {
+      console.log("Ignoring request from my_system");
+      return res.send("No action taken");
+    }
 
     const result = await callAnotherApi(userData);
     if (result === true) {

@@ -52,7 +52,7 @@ async function callAnotherApi(userData) {
 
       if (error) {
         console.error("Error fetching user:", error.message);
-        return  error.message
+        return error.message;
       }
 
       if (!user || user.length === 0) {
@@ -62,7 +62,7 @@ async function callAnotherApi(userData) {
             {
               type: "text",
               message: {
-                text: "Account not verified. please make sure that the verification code and instagram account are connected",
+                text: "Account not verified. please make sure that the verification code and Instagram account are connected",
               },
             },
           ],
@@ -80,20 +80,21 @@ async function callAnotherApi(userData) {
             },
           }
         );
-        return true
-      }
-      return 0;
-    } else {
-      return 0
-    }
 
-    // console.log("Response from another API:", response.data);
+        console.log("Response from SendPulse API:", sendResponse.data);
+        return true;
+      }
+
+      return false;
+    } else {
+      return false;
+    }
   } catch (error) {
     console.error("Error calling another API:", error);
-    return error.message
+    return error.message;
   }
-
 }
+
 
 // store data from webhook
 function storeData(data) {

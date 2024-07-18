@@ -47,8 +47,8 @@ async function callAnotherApi(userData) {
       const { data: user, error } = await supabase
         .from("channels")
         .select("*")
-        .eq("channel_name", username)
-        .eq("otp", lastMessage);
+        .eq("channel_name", userData?.username)
+        .eq("otp", userData?.lastMessage);
 
       if (error) {
         console.error("Error fetching user:", error.message);

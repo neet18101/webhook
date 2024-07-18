@@ -14,8 +14,7 @@ app.post("/webhook/incoming", async (req, res) => {
   //   console.log(data[0])
   // console.log(data);
   const data = req.body;
-  console.log(data)
-  console.log(JSON.stringify(data));
+  console.log(data, "webhook");
 
   // const username = data[0]?.contact.username;
   // const lastMessage = data[0]?.contact.last_message;
@@ -47,13 +46,17 @@ app.post("/webhook/incoming", async (req, res) => {
 
 // Endpoint to send outgoing messages
 app.post("/webhook/outgoing", async (req, res) => {
-  const { to, body } = req.body;
-  try {
-    const response = await sendOutgoingMessage(to, body);
-    res.status(200).json({ status: "success", response });
-  } catch (error) {
-    res.status(500).json({ status: "error", error: error.message });
-  }
+  const data = req.body;
+  console.log(data, "neet");
+  return res.send().status(200);
+
+  // const { to, body } = req.body;
+  // try {
+  //   const response = await sendOutgoingMessage(to, body);
+  //   res.status(200).json({ status: "success", response });
+  // } catch (error) {
+  //   res.status(500).json({ status: "error", error: error.message });
+  // }
 });
 
 const PORT = process.env.PORT || 8090;

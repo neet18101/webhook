@@ -54,7 +54,10 @@ app.post("/webhook/incoming", async (req, res) => {
             },
           }
         );
-      } catch (error) {}
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
   // Check if the username and last message exist in the Supabase database

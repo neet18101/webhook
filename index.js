@@ -12,6 +12,34 @@ const supabaseKey =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InluYmh6ZXBma2ltZmdtbXN1bWJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTg0NDc0NDAsImV4cCI6MjAxNDAyMzQ0MH0.vgtE8S-eEMykRsZBCKCpQ5E3pm49YWenakZWb4dNiG4";
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// get access token
+const clientId = "84527a4691268ce7c9a2ae8aafd159c6";
+const clientSecret = "a910cc36f1022c54f569a3ce28238fb4";
+
+const getToken = async () => {
+  try {
+    const response = await axios.post(
+      "https://api.sendpulse.com/oauth/access_token",
+      new URLSearchParams({
+        grant_type: "client_credentials",
+        client_id: clientId,
+        client_secret: clientSecret,
+      }),
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
+
+    const accessToken = response.data.access_token;
+    console.log("Access Token:", accessToken);
+    return accessToken;
+  } catch (error) {
+    console.error("Error obtaining access token:", error);
+  }
+};
+console.log(getToken());
 // Endpoint to receive incoming messages
 app.post("/webhook/incoming", async (req, res) => {
   const data = req.body;
@@ -39,10 +67,9 @@ app.post("/webhook/incoming", async (req, res) => {
         const response = await axios.post(
           "https://api.sendpulse.com/instagram/contacts/send",
           {
-            Headers: {
+            headers: {
               "Content-Type": "application/json",
-              Authorization:
-                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6Ijc5MjFjZDMzNDc2MTQ0MjE5NGI5NmJhNmM2MWM0M2NkMGNmNjE0NDQwOTE0Y2RlZjVlYmQ4OTE4ZDdlZTdiODVmMTdjNGQzZDQ5ZWRhOTJlIn0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6Ijc5MjFjZDMzNDc2MTQ0MjE5NGI5NmJhNmM2MWM0M2NkMGNmNjE0NDQwOTE0Y2RlZjVlYmQ4OTE4ZDdlZTdiODVmMTdjNGQzZDQ5ZWRhOTJlIiwiaWF0IjoxNzIxMjk5NjQ3LCJuYmYiOjE3MjEyOTk2NDcsImV4cCI6MTcyMTMwMzI0Nywic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.Qy8tMXdrRsAsEZHXmM22VjMRZw3JbxHjzsJuTODyJc07uUK5Bmy_BkH8MGpUWwm6pDbNx-DSFZYwm546dC9vYiK5bqHVdWhmI8Ll0ogk3RJr8YDa-c4DSDZ0h_g-L_Mn8Rh963wU2R5tqYEW4KJZi0GCG21iTmsvbq42n_qDz7_WTdS66PZ0Hsmq1zZvafS3FP-7WsnKBnBUl-6fEH9-dW7U4NQ-9lwprdyYhXpH_iVdhOAgr4Wq1U9EklkdPvE1eHvP4eogPd8LReLeWy80258EkpqFT4ZOgd11MKMJGgdZaIUmuUp8iUFJK9qHtDfV8dfFwNta6UgpJ2l17m4qsA",
+              Authorization: `Bearer ${await getToken()}`,
             },
             body: {
               contact_id: contact_id,
@@ -57,7 +84,7 @@ app.post("/webhook/incoming", async (req, res) => {
             },
           }
         );
-        console.log(response);
+        // console.log(response);
       } catch (error) {
         console.log(error);
       }

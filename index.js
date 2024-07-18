@@ -68,16 +68,18 @@ async function callAnotherApi(userData) {
           ],
         };
 
-        const sendResponse = await axios.post(
-          "https://api.sendpulse.com/instagram/contacts/send",
-          postData,
-          {
-            headers: {
-              Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImU4N2FiYTQxN2Y3ZGM5NjJkZjhlMGZhODBhOTY0YzkyZDcwMzhhODY5ZmI4NzRjZjFlNmViOTllMDhiMzMxOTlhNjE5ZDkwZDQ4NDA1OTE0In0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6ImU4N2FiYTQxN2Y3ZGM5NjJkZjhlMGZhODBhOTY0YzkyZDcwMzhhODY5ZmI4NzRjZjFlNmViOTllMDhiMzMxOTlhNjE5ZDkwZDQ4NDA1OTE0IiwiaWF0IjoxNzIxMzA3MDI5LCJuYmYiOjE3MjEzMDcwMjksImV4cCI6MTcyMTMxMDYyOSwic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.Pk3FiQrLsEOqDxtv_F4pyk_QRv27S9ww1MFxaVPPxxt_CyygvtdXTfsrt-EPIS1XVQRXDFGGgS_3h7b-STahVa7vzW9IzysZGKdtRNJ7uQOHJJ89-f2hbIzBAjKhg2Yr2wvf41rno0eZzyI_bwRq0sTQZc5VuNfV8E56lTRd85RgAm96DSpbBLf1uHadsFMGHyotwws_b9Mzjj3xBLUnw9hgG-NBpmhGfPkP6sS2gL0U2qOORZsp7GmZkIP-SdnZWrrAlryFsySnGj_04CVBL_mA31i0AKUaLmPQNumlCOpkXEcyIqHvprtGTRN2YuhE8_Rd4P2gYJmZUtGw4DqsDQ`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        console.log("postData", postData);
+
+        // const sendResponse = await axios.post(
+        //   "https://api.sendpulse.com/instagram/contacts/send",
+        //   postData,
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjllNWE1NzY3OTIxZGI1Njk0ZGJhNDkyZGM4YWZlNzNhZTEzZjJmNjBkZmJlYTJhYjA3ZDVkZWNjNGQ4MDU5NTgwMzRkZGI5Mjk2MzUxZWQzIn0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6IjllNWE1NzY3OTIxZGI1Njk0ZGJhNDkyZGM4YWZlNzNhZTEzZjJmNjBkZmJlYTJhYjA3ZDVkZWNjNGQ4MDU5NTgwMzRkZGI5Mjk2MzUxZWQzIiwiaWF0IjoxNzIxMzAzMzk4LCJuYmYiOjE3MjEzMDMzOTgsImV4cCI6MTcyMTMwNjk5OCwic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.vKLCCqOIVbguvVOZoyLTf40FfzOeOrI63Dvtu-EGUld2kXKRaPvU_gBwCekdRqtuSaExfHnAxFJ-l8HWydUxnZ9GTUm5tutxq0UdUKWkJBkJSzWagzyxMocqceNyfumQU1PIZotfHLLsLToGYwBhoVrozpjSDUYUdepRuk12wXqVRyNUksSfEkGHFrhNMVwpm1TJsu1OSwljm_2YtkIdmX7_jM-oaj_Ej-QC2v84mEehzOxc05yK8aycwLRJIM62PNR3dIhUY90hsceJ-gmMAvD_rMp8jUXBuO0CxQf2Mj6yHHMbu8OBoNXG8qcF-PAPChkoYRH2HoXNPpUE20KV7Q`,
+        //       "Content-Type": "application/json",
+        //     },
+        //   }
+        // );
       }
     } else {
       return res
@@ -102,16 +104,21 @@ function storeData(data) {
 
 // Endpoint to receive incoming messages
 app.post("/webhook/incoming", async (req, res) => {
-  const data = req.body;
-  const userData = storeData(data);
-  console.log("xxx");
+  try {
+    const data = req.body;
+    const userData = storeData(data);
+    console.log("xxx");
 
-  // console.log(userData, "neet");
+    // console.log(userData, "neet");
 
-  // Call another API with the stored data
-  await callAnotherApi(userData);
+    // Call another API with the stored data
+    await callAnotherApi(userData);
 
-  return res.sendStatus(200); // Corrected to use sendStatus
+    return res.sendStatus(200); // Corrected to use sendStatus
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
 });
 
 // Endpoint to send outgoing messages

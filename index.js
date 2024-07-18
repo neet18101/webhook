@@ -39,7 +39,7 @@ const getToken = async () => {
     console.error("Error obtaining access token:", error);
   }
 };
-console.log(getToken());
+// console.log(getToken());
 // Endpoint to receive incoming messages
 app.post("/webhook/incoming", async (req, res) => {
   const data = req.body;
@@ -50,6 +50,7 @@ app.post("/webhook/incoming", async (req, res) => {
   const contact_id = data[0]?.contact.id;
 
   console.log(username, lastMessage, contact_id);
+  console.log(getToken());
 
   if (isNaN(lastMessage)) {
     return res
@@ -63,31 +64,29 @@ app.post("/webhook/incoming", async (req, res) => {
       .eq("otp", lastMessage);
 
     if (!user || user.length === 0) {
-      try {
-        const response = await axios.post(
-          "https://api.sendpulse.com/instagram/contacts/send",
+      const postData = {
+        contact_id: contact_id,
+        messages: [
           {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${await getToken()}`,
+            type: "text",
+            message: {
+              text: "Account not verified. please make sure that the verification code and instagram account are connect",
             },
-            body: {
-              contact_id: contact_id,
-              messages: [
-                {
-                  type: "text",
-                  message: {
-                    text: "Account not verified. Please make sure that the verification code and Instagram account are correct",
-                  },
-                },
-              ],
-            },
-          }
-        );
-        // console.log(response);
-      } catch (error) {
-        console.log(error);
-      }
+          },
+        ],
+      };
+      await axios.post(
+        "https://api.sendpulse.com/instagram/contacts/send",
+        postData,
+        {
+          headers: {
+            Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImI1YWU2NjRhZDc1YmJiY2FmOWIwMjA3YzI0MzM2NzU0NWU0NDhkZjE1ZjBkMDA1NTU3NDUyZDEzNWY1MWE3YjJjZjMxZGEyZGI3ZWZjNzhmIn0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6ImI1YWU2NjRhZDc1YmJiY2FmOWIwMjA3YzI0MzM2NzU0NWU0NDhkZjE1ZjBkMDA1NTU3NDUyZDEzNWY1MWE3YjJjZjMxZGEyZGI3ZWZjNzhmIiwiaWF0IjoxNzIxMjk5MzMzLCJuYmYiOjE3MjEyOTkzMzMsImV4cCI6MTcyMTMwMjkzMywic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.vRg_Fxm2_5guvkOqj0AppHW0qvwrOfwx1T52OQW_U8Uva5-btZrZu37CU5AnslqYbkZ_7zEbo-vu1yTxJZto6Yx6FC5lbUtNwanCvSF8qQwH5ofpi7JjUk_iVP8tO6a00NzvZwQM8aa-Jp0te2J7v1Q946gXbsYIZb5wl7dto-ZWGRJYwOmvMU1cjKvORoO-oefcZsEFZYIl4dhBQEY2mctHGvS3FkC1NDvEsE1FpOw33OdfSHceSfVbUHpGi2qevDRJtVUddM8S-Q3Z1UFIscK3sigbYEbJeI70nxJKJKYpxrvgyQU1ke59_gsWR2-jP7dVpso79ddJOkIUW7dwGQ`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      res.status(200).send();
+      // console.log(response);
     }
   }
   // Check if the username and last message exist in the Supabase database

@@ -37,18 +37,16 @@ const getToken = async () => {
     return accessToken;
   } catch (error) {
     console.error("Error obtaining access token:", error);
+    throw error; // Re-throw error to be handled by the caller
   }
 };
-console.log(getToken());
+
 // Endpoint to receive incoming messages
 app.post("/webhook/incoming", async (req, res) => {
   const data = req.body;
-  // console.log(data, "webhook");
   const username = data[0]?.contact.username;
   const lastMessage = data[0]?.contact.last_message;
   const contact_id = data[0]?.contact.id;
-
-  console.log(username, lastMessage, contact_id);
 
   if (isNaN(lastMessage)) {
     return res
@@ -74,37 +72,36 @@ app.post("/webhook/incoming", async (req, res) => {
             {
               type: "text",
               message: {
-                text: "Account not verified. please make sure that the verification code and instagram account are connect",
+                text: "Account not verified. please make sure that the verification code and instagram account are connected",
               },
             },
           ],
         };
 
         try {
+          const token = await getToken(); // Ensure the token is obtained before sending the request
           const sendResponse = await axios.post(
             "https://api.sendpulse.com/instagram/contacts/send",
             postData,
             {
               headers: {
-                Authorization: `Bearer ${await getToken()}`,
+                Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjllNWE1NzY3OTIxZGI1Njk0ZGJhNDkyZGM4YWZlNzNhZTEzZjJmNjBkZmJlYTJhYjA3ZDVkZWNjNGQ4MDU5NTgwMzRkZGI5Mjk2MzUxZWQzIn0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6IjllNWE1NzY3OTIxZGI1Njk0ZGJhNDkyZGM4YWZlNzNhZTEzZjJmNjBkZmJlYTJhYjA3ZDVkZWNjNGQ4MDU5NTgwMzRkZGI5Mjk2MzUxZWQzIiwiaWF0IjoxNzIxMzAzMzk4LCJuYmYiOjE3MjEzMDMzOTgsImV4cCI6MTcyMTMwNjk5OCwic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.vKLCCqOIVbguvVOZoyLTf40FfzOeOrI63Dvtu-EGUld2kXKRaPvU_gBwCekdRqtuSaExfHnAxFJ-l8HWydUxnZ9GTUm5tutxq0UdUKWkJBkJSzWagzyxMocqceNyfumQU1PIZotfHLLsLToGYwBhoVrozpjSDUYUdepRuk12wXqVRyNUksSfEkGHFrhNMVwpm1TJsu1OSwljm_2YtkIdmX7_jM-oaj_Ej-QC2v84mEehzOxc05yK8aycwLRJIM62PNR3dIhUY90hsceJ-gmMAvD_rMp8jUXBuO0CxQf2Mj6yHHMbu8OBoNXG8qcF-PAPChkoYRH2HoXNPpUE20KV7Q`,
                 "Content-Type": "application/json",
               },
             }
           );
+          console.log("SendPulse response:", sendResponse.data);
           return res.status(200).json({
             status: "success",
             data: sendResponse.data,
             message: "Message sent successfully",
           });
-
-          console.log("SendPulse response:", sendResponse.data);
-          res.status(200).send({ status: "success", data: sendResponse.data });
         } catch (axiosError) {
           console.error(
             "Error sending message:",
             axiosError.response?.data || axiosError.message
           );
-          res
+          return res
             .status(500)
             .json({ status: "error", message: "Failed to send message" });
         }
@@ -123,26 +120,13 @@ app.post("/webhook/incoming", async (req, res) => {
         .json({ status: "error", message: "Database query failed" });
     }
   }
-
-  // Check if the username and last message exist in the Supabase database
-
-  // if (error) {
-  //   console.log("Error fetching user:", error.message);
-  //   return res.status(500).json({ status: "error", error: error.message });
-  // }
-
-  // Process the incoming message here
-  // console.log("User found:", JSON.stringify(user));
-  // return res
-  //   .status(200)
-  //   .json({ status: "success", data: user, message: "User found in database" });
 });
 
 // Endpoint to send outgoing messages
 app.post("/webhook/outgoing", async (req, res) => {
   const data = req.body;
   console.log(data, "neet");
-  return res.send().status(200);
+  return res.sendStatus(200); // Corrected to use sendStatus
 
   // const { to, body } = req.body;
   // try {

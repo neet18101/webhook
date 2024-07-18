@@ -2,6 +2,7 @@ const express = require("express");
 const axios = require("axios");
 const app = express();
 app.use(express.json());
+var sendpulse = require("sendpulse-api");
 
 // Initialize Supabase client
 const { createClient } = require("@supabase/supabase-js");
@@ -19,6 +20,8 @@ app.post("/webhook/incoming", async (req, res) => {
   const username = data[0]?.contact.username;
   const lastMessage = data[0]?.contact.last_message;
   const contact_id = data[0]?.contact.id;
+
+  console.log(username, lastMessage, contact_id);
 
   if (isNaN(lastMessage)) {
     return res

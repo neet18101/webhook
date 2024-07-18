@@ -30,9 +30,9 @@ app.post("/webhook/incoming", async (req, res) => {
     return res.status(500).json({ status: "error", error: error.message });
   }
 
-  if (user) {
+  if (data) {
     // Process the incoming message here
-    console.log(JSON.stringify(user));
+    console.log("neet", JSON.stringify(user));
     res
       .status(200)
       .json({ status: "success", data, message: "User found in database" });

@@ -30,13 +30,13 @@ app.post("/webhook/incoming", async (req, res) => {
     return res.status(500).json({ status: "error", error: error.message });
   }
 
-  if (data) {
-    // Process the incoming message here
-    console.log("neet", JSON.stringify(user));
-    res
-      .status(200)
-      .json({ status: "success", data, message: "User found in database" });
+  if (!user || user.length === 0) {
+    return res.status(404).json({ status: "error", message: "User not found" });
   }
+
+  // Process the incoming message here
+  console.log("User found:", JSON.stringify(user));
+  return res.status(200).json({ status: "success", data: user, message: "User found in database" });
 });
 
 // Endpoint to send outgoing messages

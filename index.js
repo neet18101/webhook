@@ -52,7 +52,7 @@ async function callAnotherApi(userData) {
 
       if (error) {
         console.error("Error fetching user:", error.message);
-        return res.status(500).json({ status: "error", error: error.message });
+        return  error.message
       }
 
       if (!user || user.length === 0) {
@@ -75,24 +75,24 @@ async function callAnotherApi(userData) {
           postData,
           {
             headers: {
-              Authorization: `Bearer ${getToken()}`,
+              Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImM2MTRlYjZiMzMyNjM2OTdlZWU1Yzg5MDJhYjc4YzU5NTNlZTQ2ZjEwYjk4ZDRhNDBiMmFlYzY0MDIzZTkyOWNiOWY5ZDYyZmM1YmRmZGFhIn0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6ImM2MTRlYjZiMzMyNjM2OTdlZWU1Yzg5MDJhYjc4YzU5NTNlZTQ2ZjEwYjk4ZDRhNDBiMmFlYzY0MDIzZTkyOWNiOWY5ZDYyZmM1YmRmZGFhIiwiaWF0IjoxNzIxMzA5NjU2LCJuYmYiOjE3MjEzMDk2NTYsImV4cCI6MTcyMTMxMzI1Niwic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.yRp-kI4j2JZR7S2pyA1cyd890WktHY4quWk9caM8e9euk-7DJ3znVvytmGbdXcDvipSh5MxqUEOF70sL33g3uaJvh4WPrvu1MAKJr4T72n7pnz3eu6UOkYiB26KLSGGjw4X4zqV6ih8WFJjg4lMCywefVx8w9XxBpQdovdXhDU0jiHkLj-D4GOGVpCojL_1I5B9hwXw8igRt1sqw3yp2yKp8_O4yw2vm2Tlwph8dAAogHSQphSJos90VrUuVAYrJevv4C6dIHnQPjmqIKyG9_9oa7rUqask7sYAyQt9NgjgofpdX52yQ9mb1I0j0gvX4pieiL6AG8OpqIXv0o3OLZw`,
               "Content-Type": "application/json",
             },
           }
         );
+        return sendResponse.data
       }
       return 0;
     } else {
-      return res
-        .status(400)
-        .json({ status: "error", message: "Last message is not numeric" });
+      return 0
     }
 
     // console.log("Response from another API:", response.data);
   } catch (error) {
     console.error("Error calling another API:", error);
-    return res.status(500).json({ message: error.message });
+    return error.message
   }
+
 }
 
 // store data from webhook

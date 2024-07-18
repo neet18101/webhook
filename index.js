@@ -56,73 +56,76 @@ app.post("/webhook/incoming", async (req, res) => {
       .status(400)
       .json({ status: "error", message: "Last message is not numeric" });
   } else {
-    try {
-      const { data: user, error } = await supabase
-        .from("channels")
-        .select("*")
-        .eq("channel_name", username)
-        .eq("otp", lastMessage);
+    res
+      .status(200)
+      .json({ status: "success", message: "Last message is numeric" });
+    // try {
+    //   const { data: user, error } = await supabase
+    //     .from("channels")
+    //     .select("*")
+    //     .eq("channel_name", username)
+    //     .eq("otp", lastMessage);
 
-      if (error) {
-        console.error("Error fetching user:", error.message);
-        return res.status(500).json({ status: "error", error: error.message });
-      }
+    //   if (error) {
+    //     console.error("Error fetching user:", error.message);
+    //     return res.status(500).json({ status: "error", error: error.message });
+    //   }
 
-      if (!user || user.length === 0) {
-        const postData = {
-          contact_id: contact_id,
-          messages: [
-            {
-              type: "text",
-              message: {
-                text: "Account not verified. please make sure that the verification code and instagram account are connect",
-              },
-            },
-          ],
-        };
+    //   if (!user || user.length === 0) {
+    //     const postData = {
+    //       contact_id: contact_id,
+    //       messages: [
+    //         {
+    //           type: "text",
+    //           message: {
+    //             text: "Account not verified. please make sure that the verification code and instagram account are connect",
+    //           },
+    //         },
+    //       ],
+    //     };
 
-        try {
-          const sendResponse = await axios.post(
-            "https://api.sendpulse.com/instagram/contacts/send",
-            postData,
-            {
-              headers: {
-                Authorization: `Bearer ${await getToken()}`,
-                "Content-Type": "application/json",
-              },
-            }
-          );
-          return res.status(200).json({
-            status: "success",
-            data: sendResponse.data,
-            message: "Message sent successfully",
-          });
+    //     try {
+    //       const sendResponse = await axios.post(
+    //         "https://api.sendpulse.com/instagram/contacts/send",
+    //         postData,
+    //         {
+    //           headers: {
+    //             Authorization: `Bearer ${await getToken()}`,
+    //             "Content-Type": "application/json",
+    //           },
+    //         }
+    //       );
+    //       return res.status(200).json({
+    //         status: "success",
+    //         data: sendResponse.data,
+    //         message: "Message sent successfully",
+    //       });
 
-          console.log("SendPulse response:", sendResponse.data);
-          res.status(200).send({ status: "success", data: sendResponse.data });
-        } catch (axiosError) {
-          console.error(
-            "Error sending message:",
-            axiosError.response?.data || axiosError.message
-          );
-          res
-            .status(500)
-            .json({ status: "error", message: "Failed to send message" });
-        }
-      } else {
-        // User found in the database
-        return res.status(200).json({
-          status: "success",
-          data: user,
-          message: "User found in database",
-        });
-      }
-    } catch (supabaseError) {
-      console.error("Error querying Supabase:", supabaseError.message);
-      return res
-        .status(500)
-        .json({ status: "error", message: "Database query failed" });
-    }
+    //       console.log("SendPulse response:", sendResponse.data);
+    //       res.status(200).send({ status: "success", data: sendResponse.data });
+    //     } catch (axiosError) {
+    //       console.error(
+    //         "Error sending message:",
+    //         axiosError.response?.data || axiosError.message
+    //       );
+    //       res
+    //         .status(500)
+    //         .json({ status: "error", message: "Failed to send message" });
+    //     }
+    //   } else {
+    //     // User found in the database
+    //     return res.status(200).json({
+    //       status: "success",
+    //       data: user,
+    //       message: "User found in database",
+    //     });
+    //   }
+    // } catch (supabaseError) {
+    //   console.error("Error querying Supabase:", supabaseError.message);
+    //   return res
+    //     .status(500)
+    //     .json({ status: "error", message: "Database query failed" });
+    // }
   }
 
   // Check if the username and last message exist in the Supabase database

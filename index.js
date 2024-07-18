@@ -81,6 +81,7 @@ async function callAnotherApi(userData) {
           }
         );
       }
+      return 0;
     } else {
       return res
         .status(400)
@@ -90,6 +91,7 @@ async function callAnotherApi(userData) {
     // console.log("Response from another API:", response.data);
   } catch (error) {
     console.error("Error calling another API:", error);
+    return res.status(500).json({ message: error.message });
   }
 }
 
@@ -112,8 +114,8 @@ app.post("/webhook/incoming", async (req, res) => {
     // console.log(userData, "neet");
 
     // Call another API with the stored data
-    await callAnotherApi(userData);
-
+    const a = await callAnotherApi(userData);
+    console.log(a);
     return res.sendStatus(200); // Corrected to use sendStatus
   } catch (error) {
     console.log(error);

@@ -68,39 +68,17 @@ async function callAnotherApi(userData) {
           ],
         };
 
-        try {
-          const token = await getToken(); // Ensure the token is obtained before sending the request
-          const sendResponse = await axios.post(
-            "https://api.sendpulse.com/instagram/contacts/send",
-            postData,
-            {
-              headers: {
-                Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjllNWE1NzY3OTIxZGI1Njk0ZGJhNDkyZGM4YWZlNzNhZTEzZjJmNjBkZmJlYTJhYjA3ZDVkZWNjNGQ4MDU5NTgwMzRkZGI5Mjk2MzUxZWQzIn0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6IjllNWE1NzY3OTIxZGI1Njk0ZGJhNDkyZGM4YWZlNzNhZTEzZjJmNjBkZmJlYTJhYjA3ZDVkZWNjNGQ4MDU5NTgwMzRkZGI5Mjk2MzUxZWQzIiwiaWF0IjoxNzIxMzAzMzk4LCJuYmYiOjE3MjEzMDMzOTgsImV4cCI6MTcyMTMwNjk5OCwic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.vKLCCqOIVbguvVOZoyLTf40FfzOeOrI63Dvtu-EGUld2kXKRaPvU_gBwCekdRqtuSaExfHnAxFJ-l8HWydUxnZ9GTUm5tutxq0UdUKWkJBkJSzWagzyxMocqceNyfumQU1PIZotfHLLsLToGYwBhoVrozpjSDUYUdepRuk12wXqVRyNUksSfEkGHFrhNMVwpm1TJsu1OSwljm_2YtkIdmX7_jM-oaj_Ej-QC2v84mEehzOxc05yK8aycwLRJIM62PNR3dIhUY90hsceJ-gmMAvD_rMp8jUXBuO0CxQf2Mj6yHHMbu8OBoNXG8qcF-PAPChkoYRH2HoXNPpUE20KV7Q`,
-                "Content-Type": "application/json",
-              },
-            }
-          );
-          console.log("SendPulse response:", sendResponse.data);
-          return res.status(200).json({
-            status: "success",
-            data: sendResponse.data,
-            message: "Message sent successfully",
-          });
-        } catch (axiosError) {
-          console.error(
-            "Error sending message:",
-            axiosError.response?.data || axiosError.message
-          );
-          return res
-            .status(500)
-            .json({ status: "error", message: "Failed to send message" });
-        }
+        const sendResponse = await axios.post(
+          "https://api.sendpulse.com/instagram/contacts/send",
+          postData,
+          {
+            headers: {
+              Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjllNWE1NzY3OTIxZGI1Njk0ZGJhNDkyZGM4YWZlNzNhZTEzZjJmNjBkZmJlYTJhYjA3ZDVkZWNjNGQ4MDU5NTgwMzRkZGI5Mjk2MzUxZWQzIn0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6IjllNWE1NzY3OTIxZGI1Njk0ZGJhNDkyZGM4YWZlNzNhZTEzZjJmNjBkZmJlYTJhYjA3ZDVkZWNjNGQ4MDU5NTgwMzRkZGI5Mjk2MzUxZWQzIiwiaWF0IjoxNzIxMzAzMzk4LCJuYmYiOjE3MjEzMDMzOTgsImV4cCI6MTcyMTMwNjk5OCwic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.vKLCCqOIVbguvVOZoyLTf40FfzOeOrI63Dvtu-EGUld2kXKRaPvU_gBwCekdRqtuSaExfHnAxFJ-l8HWydUxnZ9GTUm5tutxq0UdUKWkJBkJSzWagzyxMocqceNyfumQU1PIZotfHLLsLToGYwBhoVrozpjSDUYUdepRuk12wXqVRyNUksSfEkGHFrhNMVwpm1TJsu1OSwljm_2YtkIdmX7_jM-oaj_Ej-QC2v84mEehzOxc05yK8aycwLRJIM62PNR3dIhUY90hsceJ-gmMAvD_rMp8jUXBuO0CxQf2Mj6yHHMbu8OBoNXG8qcF-PAPChkoYRH2HoXNPpUE20KV7Q`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
       }
-
-      const response = await axios.post(
-        "https://example.com/another-api-endpoint",
-        userData
-      );
     } else {
       return res
         .status(400)
@@ -111,13 +89,6 @@ async function callAnotherApi(userData) {
   } catch (error) {
     console.error("Error calling another API:", error);
   }
-
-  // try {
-  //   const response = await axios.post('https://example.com/another-api-endpoint', userData);
-  //   console.log('Response from another API:', response.data);
-  // } catch (error) {
-  //   console.error('Error calling another API:', error);
-  // }
 }
 
 // store data from webhook
@@ -134,7 +105,7 @@ app.post("/webhook/incoming", async (req, res) => {
   const data = req.body;
   const userData = storeData(data);
 
-  console.log(userData, "neet");
+  // console.log(userData, "neet");
 
   // Call another API with the stored data
   await callAnotherApi(userData);
@@ -147,14 +118,6 @@ app.post("/webhook/outgoing", async (req, res) => {
   const data = req.body;
   console.log(data, "neet");
   return res.sendStatus(200); // Corrected to use sendStatus
-
-  // const { to, body } = req.body;
-  // try {
-  //   const response = await sendOutgoingMessage(to, body);
-  //   res.status(200).json({ status: "success", response });
-  // } catch (error) {
-  //   res.status(500).json({ status: "error", error: error.message });
-  // }
 });
 
 const PORT = process.env.PORT || 8090;

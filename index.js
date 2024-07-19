@@ -123,7 +123,7 @@ function storeData(data) {
   const username = data[0]?.contact.username;
   const lastMessage = data[0]?.contact.last_message;
   const contact_id = data[0]?.contact.id;
-
+console.log(data, "Ayu")
   return { username, lastMessage, contact_id };
 }
 

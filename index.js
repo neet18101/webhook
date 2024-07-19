@@ -52,7 +52,7 @@ function storeData(data) {
 }
 
 // Endpoint to receive incoming messages
-app.get("/webhook/incoming", async (req, res) => {
+app.post("/webhook/incoming", async (req, res) => {
   const data = req.body;
   const userData = storeData(data);
   console.log(userData);
@@ -71,7 +71,7 @@ app.get("/webhook/incoming", async (req, res) => {
   //     }
   //   }
   // }
-  // return res.sendStatus(200); // Corrected to use sendStatus
+  return res.sendStatus(200); // Corrected to use sendStatus
 });
 
 // Endpoint to send outgoing messages

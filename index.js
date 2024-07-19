@@ -54,25 +54,53 @@ function storeData(data) {
 // Endpoint to receive incoming messages
 app.post("/webhook/incoming", async (req, res) => {
   try {
+    const startTime = Date.now();
+    console.log("Received webhook:", req.body);
+
     const data = req.body;
     const userData = storeData(data);
-    // console.log(userData?.lastMessage);
+    console.log("Parsed user data:", userData);
+
+    // Measure time taken to parse user data
+    const parseTime = Date.now();
+    console.log("Time taken to parse data:", parseTime - startTime, "ms");
+
     if (!isNaN(userData.lastMessage)) {
+      const queryStartTime = Date.now();
       const { data: user, error } = await supabase
         .from("channels")
         .select("channel_name, otp")
         .eq("channel_name", userData?.username)
         .eq("otp", userData?.lastMessage);
 
+      // Measure time taken for Supabase query
+      const queryEndTime = Date.now();
+      console.log(
+        "Time taken for Supabase query:",
+        queryEndTime - queryStartTime,
+        "ms"
+      );
+
+      if (error) {
+        console.error("Error fetching user:", error.message);
+        return res.status(500).send(error.message);
+      }
+
+      console.log("Fetched user:", user);
       if (!user || user.length === 0) {
-        console.log("user", user);
+        console.log("No matching user found:", user);
         return res.status(500).send();
       }
     }
-    // return res.sendStatus(200); // Corrected to use sendStatus
+
+    // Measure total time taken for the request
+    const endTime = Date.now();
+    console.log("Total time taken:", endTime - startTime, "ms");
+
+    return res.sendStatus(200); // Corrected to use sendStatus
   } catch (error) {
-    console.log(error);
-    res.status(500).send(error);
+    console.log("Error handling webhook:", error);
+    return res.status(500).send(error.message);
   }
 });
 

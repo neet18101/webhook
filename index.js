@@ -133,6 +133,7 @@ const inComingDetails = [];
 app.post("/webhook/incoming", async (req, res) => {
   try {
     const data = req.body;
+    console.log(data)
     const userData = storeData(data);
     console.log("xxx" ,userData);
     const check = await inComingDetails.find((obj) => obj.contact_id === userData.contact_id);

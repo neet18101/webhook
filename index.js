@@ -59,9 +59,9 @@ app.post("/webhook/incoming", async (req, res) => {
   // Simulate storeData function
   const storeData = (data) => {
     return {
-      contact_id: data.contact_id,
+      contact_id: data.id,
       username: data.username,
-      lastMessage: data.lastMessage,
+      lastMessage: data.last_message,
     };
   };
 

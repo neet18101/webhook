@@ -122,6 +122,7 @@ async function callAnotherApi(userData) {
         return true;
       }
     } else {
+      console.log(userData, "neet");
       return false;
     }
   } catch (error) {
@@ -145,7 +146,7 @@ const inComingDetails = [];
 app.post("/webhook/incoming", async (req, res) => {
   try {
     const data = req.body;
-    console.log(data);
+    console.log(data[0]?.info?.message, data);
     const userData = storeData(data);
     const check = await inComingDetails.find(
       (obj) =>

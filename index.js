@@ -101,7 +101,7 @@ async function callAnotherApi(userData) {
           postData,
           {
             headers: {
-              Authorization: `Bearer `,
+              Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImFmMmQwNjg5ZDRiNTkxODU0ZDI0ZTgyZTE4MTU4YWE4YWFhM2NjZmJmNGE3ODgwZDgwYjRhOGVhYjM0MGE2YzdiZWJjMTY2YWY3OGE5ZTdlIn0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6ImFmMmQwNjg5ZDRiNTkxODU0ZDI0ZTgyZTE4MTU4YWE4YWFhM2NjZmJmNGE3ODgwZDgwYjRhOGVhYjM0MGE2YzdiZWJjMTY2YWY3OGE5ZTdlIiwiaWF0IjoxNzIxMzgwOTkxLCJuYmYiOjE3MjEzODA5OTEsImV4cCI6MTcyMTM4NDU5MSwic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.pMSvdQzfbTS9lztdBgsC5juAfPcDM6dTIx_tFar2Y2uya3gv3B0AmFRegZHMJM-0XF8QSOBeR3OKLHy9kG1MA4Gpgmw_ZjEDrkruKKUQ5BkPdwv5kxva2f0P2FHX_niVq57X9eNDalTxi-Cc12GG6xGYTSHR-wy1XrICxA1fOzOWLnQJv9wLxqoqox0IbW-TLjBVOg0ox3opoTJStNSVkJP-OLabHNOeF0KgcFElXsQ-zl61ZALFM4cFhjeksswbKr1HfhPkxmKZ2DTqiRjqZNnAkrCq1LY7uAGgSqvXRZbfsflvE0eZjcHY4runBS31c7NwBWcVposhZXTfOFyYSg`,
               "Content-Type": "application/json",
             },
           }

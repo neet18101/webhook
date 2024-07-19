@@ -127,17 +127,23 @@ function storeData(data) {
   return { username, lastMessage, contact_id };
 }
 
+const inComingDetails = [];
+
 // Endpoint to receive incoming messages
 app.post("/webhook/incoming", async (req, res) => {
   try {
     const data = req.body;
     const userData = storeData(data);
     console.log("xxx" ,userData);
-
+    const check = await inComingDetails.find((obj) => obj.contact_id === userData.contact_id);
+    if(check){
+      return res.sendStatus(200);
+    }else{
+      inComingDetails.push(userData);
+      await callAnotherApi(userData);
+    }
     // console.log(userData, "neet");
-
     // Call another API with the stored data
-    await callAnotherApi(userData);
 
     return res.sendStatus(200); // Corrected to use sendStatus
   } catch (error) {

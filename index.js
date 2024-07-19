@@ -113,10 +113,10 @@ app.post("/webhook/incoming", async (req, res) => {
     // console.log(userData, "neet");
 
     // Call another API with the stored data
-    const a = await callAnotherApi(userData);
-    if (a) {
-      return res.send("message gone");
-    }
+    // const a = await callAnotherApi(userData);
+    // if (a) {
+    //   return res.send("message gone");
+    // }
     return res.sendStatus(200); // Corrected to use sendStatus
   } catch (error) {
     console.log(error);

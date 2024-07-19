@@ -124,6 +124,7 @@ function storeData(data) {
   const lastMessage = data[0]?.contact.last_message;
   const contact_id = data[0]?.contact.id;
   const date = data[0]?.date;
+  console.log(data ?? [], "data ")
   return { username, lastMessage, contact_id, date };
 }
 
@@ -135,7 +136,7 @@ app.post("/webhook/incoming", async (req, res) => {
     const data = req.body;
     console.log(data)
     const userData = storeData(data);
-    const check = await inComingDetails.find((obj) => obj.contact_id === userData.contact_id && obj.date == userData.date);
+    const check = await inComingDetails.find((obj) => obj.contact_id === userData.contact_id);
     console.log(check, "neet", userData, inComingDetails);
     if(check){
       return res.sendStatus(200);

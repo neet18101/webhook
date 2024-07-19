@@ -93,15 +93,12 @@ async function callAnotherApi(userData) {
             },
           ],
         };
-
-        // console.log("postData", postData);
-
         const sendResponse = await axios.post(
           process.env.SEND_INSTAGRAM_MESSAGE_URL,
           postData,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${process.env.INSTAGRAM_TOKEN}`,
               "Content-Type": "application/json",
             },
           }

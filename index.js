@@ -68,8 +68,6 @@ async function callAnotherApi(userData) {
           ],
         };
 
-        console.log("postData", postData);
-
         const sendResponse = await axios.post(
           "https://api.sendpulse.com/instagram/contacts/send",
           postData,
@@ -108,6 +106,8 @@ async function callAnotherApi(userData) {
             },
           }
         );
+
+        return true;
       }
     } else {
       return false;
@@ -137,10 +137,8 @@ app.post("/webhook/incoming", async (req, res) => {
     // console.log(userData, "neet");
 
     // Call another API with the stored data
-    const a = await callAnotherApi(userData);
-    if (a) {
-      return res.send("message gone");
-    }
+    await callAnotherApi(userData);
+
     return res.sendStatus(200); // Corrected to use sendStatus
   } catch (error) {
     console.log(error);

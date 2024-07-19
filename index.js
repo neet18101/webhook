@@ -123,8 +123,9 @@ function storeData(data) {
   const username = data[0]?.contact.username;
   const lastMessage = data[0]?.contact.last_message;
   const contact_id = data[0]?.contact.id;
+  const date = data[0].date
 console.log(data, "Ayu")
-  return { username, lastMessage, contact_id };
+  return { username, lastMessage, contact_id, date };
 }
 
 const inComingDetails = [];
@@ -135,8 +136,7 @@ app.post("/webhook/incoming", async (req, res) => {
     const data = req.body;
     console.log(data)
     const userData = storeData(data);
-    console.log("xxx" ,userData);
-    const check = await inComingDetails.find((obj) => obj.contact_id === userData.contact_id);
+    const check = await inComingDetails.find((obj) => obj.contact_id === userData.contact_id && obj.date === userData.date);
     if(check){
       return res.sendStatus(200);
     }else{

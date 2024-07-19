@@ -73,7 +73,7 @@ async function callAnotherApi(userData) {
           postData,
           {
             headers: {
-              Authorization: `Bearer ${token} `,
+              Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
           }
@@ -101,7 +101,7 @@ async function callAnotherApi(userData) {
           postData,
           {
             headers: {
-              Authorization: `Bearer `,
+              Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
           }

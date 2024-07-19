@@ -63,9 +63,10 @@ app.post("/webhook/incoming", async (req, res) => {
         .select("channel_name, otp")
         .eq("channel_name", userData?.username)
         .eq("otp", userData?.lastMessage);
-      console.log("user", user);
+
       if (!user || user.length === 0) {
-        res.sendStatus(500);
+        console.log("user", user);
+        return res.sendStatus(500);
       }
     }
     // return res.sendStatus(200); // Corrected to use sendStatus

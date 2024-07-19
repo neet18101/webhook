@@ -84,9 +84,10 @@ async function callAnotherApi(userData) {
       } else {
         const { data: user, error } = await supabase
           .from("channels")
-          .eq("channel_name", userData?.username)
-          .eq("is_verified", true);
-        if (user.length > 0) {
+          .select("id, is_verified")
+          .eq("channel_name", userData?.username);
+
+        if (user[0].is_verified) {
           return true;
         } else {
           const { data: updateUser, error } = await supabase

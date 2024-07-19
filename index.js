@@ -48,8 +48,7 @@ async function callAnotherApi(userData) {
         .from("channels")
         .select("*")
         .eq("channel_name", userData?.username)
-        .eq("otp", userData?.lastMessage)
-        .eq("is_verified", false);
+        .eq("otp", userData?.lastMessage);
 
       if (error) {
         console.error("Error fetching user:", error.message);

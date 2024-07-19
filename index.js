@@ -63,7 +63,7 @@ app.post("/webhook/incoming", async (req, res) => {
         .select("channel_name, otp")
         .eq("channel_name", userData?.username)
         .eq("otp", userData?.lastMessage);
-
+      console.log(user);
       if (error) {
         throw new Error(error.message);
       }

@@ -52,24 +52,25 @@ function storeData(data) {
 }
 
 // Endpoint to receive incoming messages
-app.post("/webhook/incoming", async (req, res) => {
+app.get("/webhook/incoming", async (req, res) => {
   const data = req.body;
   const userData = storeData(data);
+  console.log(userData);
   // console.log(userData?.lastMessage);
-  if (!isNaN(userData.lastMessage)) {
-    const { data: user, error } = await supabase
-      .from("channels")
-      .select("channel_name, otp")
-      .eq("channel_name", userData?.username)
-      .eq("otp", userData?.lastMessage);
-    if (!user || user.length === 0) {
-      try {
-        return res.sendStatus(500);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  }
+  // if (!isNaN(userData.lastMessage)) {
+  //   const { data: user, error } = await supabase
+  //     .from("channels")
+  //     .select("channel_name, otp")
+  //     .eq("channel_name", userData?.username)
+  //     .eq("otp", userData?.lastMessage);
+  //   if (!user || user.length === 0) {
+  //     try {
+  //       return res.sendStatus(500);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+  // }
   // return res.sendStatus(200); // Corrected to use sendStatus
 });
 

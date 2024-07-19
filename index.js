@@ -3,7 +3,7 @@ const axios = require("axios");
 const app = express();
 app.use(express.json());
 var sendpulse = require("sendpulse-api");
-
+const { v4: uuidv4 } = require("uuid");
 // Initialize Supabase client
 const { createClient } = require("@supabase/supabase-js");
 
@@ -108,7 +108,7 @@ app.post("/webhook/incoming", async (req, res) => {
   try {
     const data = req.body;
     const userData = storeData(data);
-    console.log("xxx");
+    console.log(data);
 
     // console.log(userData, "neet");
 

@@ -17,6 +17,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "nodemon": "^3.1.4",
-    "sendpulse-api": "^1.1.7"
+    "sendpulse-api": "^1.1.7",
+    "uuid": "^10.0.0"
   }
 }

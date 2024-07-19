@@ -68,24 +68,19 @@ app.post("/webhook/incoming", async (req, res) => {
   const userData = storeData(data);
   console.log("Processed userData:", userData);
 
-  try {
-    if (!isNaN(userData.lastMessage)) {
-      const { data: user, error } = await supabase
-        .from("channels")
-        .select("channel_name, otp")
-        .eq("channel_name", userData?.username)
-        .eq("otp", userData?.lastMessage);
-      console.log("Supabase response:", user);
+  if (!isNaN(userData.lastMessage)) {
+    const { data: user, error } = await supabase
+      .from("channels")
+      .select("channel_name, otp")
+      .eq("channel_name", userData?.username)
+      .eq("otp", userData?.lastMessage);
+    console.log("Supabase response:", user);
 
-      if (!user || user.length === 0) {
-        return res.sendStatus(200); // Method Not Allowed if user not found
-      } else {
-        return res.sendStatus(200); // OK if user is found
-      }
+    if (!user || user.length === 0) {
+      return res.sendStatus(200); // Method Not Allowed if user not found
+    } else {
+      return res.sendStatus(200); // OK if user is found
     }
-  } catch (error) {
-    console.error("Error processing webhook:", error);
-    return res.sendStatus(500); // Internal Server Error in case of failure
   }
 });
 

@@ -3,41 +3,43 @@ const axios = require("axios");
 const app = express();
 app.use(express.json());
 var sendpulse = require("sendpulse-api");
-require("dotenv").config();
 
 // Initialize Supabase client
 const { createClient } = require("@supabase/supabase-js");
 
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_KEY;
+const supabaseUrl = "https://ynbhzepfkimfgmmsumbb.supabase.co";
+const supabaseKey =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InluYmh6ZXBma2ltZmdtbXN1bWJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTg0NDc0NDAsImV4cCI6MjAxNDAyMzQ0MH0.vgtE8S-eEMykRsZBCKCpQ5E3pm49YWenakZWb4dNiG4";
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // get access token
-const client_id = process.env.CLIENT_ID;
-const client_secret = process.env.CLIENT_SECRET;
-let token = null;
-let tokenExpiry = null;
+const clientId = "84527a4691268ce7c9a2ae8aafd159c6";
+const clientSecret = "a910cc36f1022c54f569a3ce28238fb4";
 
-async function getNewToken() {
+const getToken = async () => {
   try {
-    const response = await axios.post(token_url, {
-      grant_type: "client_credentials",
-      client_id: client_id,
-      client_secret: client_secret,
-    });
+    const response = await axios.post(
+      "https://api.sendpulse.com/oauth/access_token",
+      new URLSearchParams({
+        grant_type: "client_credentials",
+        client_id: clientId,
+        client_secret: clientSecret,
+      }),
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
 
-    token = response.data.access_token;
-    tokenExpiry = Date.now() + response.data.expires_in * 1000;
-    console.log("New token obtained:", token);
+    const accessToken = response.data.access_token;
+    console.log("Access Token:", accessToken);
+    return accessToken;
   } catch (error) {
-    console.error("Error obtaining token:", error);
+    console.error("Error obtaining access token:", error);
+    throw error; // Re-throw error to be handled by the caller
   }
-}
-async function ensureValidToken() {
-  if (!token || Date.now() >= tokenExpiry) {
-    await getNewToken();
-  }
-}
+};
 
 async function callAnotherApi(userData) {
   try {
@@ -66,14 +68,12 @@ async function callAnotherApi(userData) {
           ],
         };
 
-        await ensureValidToken();
-
         const sendResponse = await axios.post(
-          process.env.SEND_INSTAGRAM_MESSAGE_URL,
+          "https://api.sendpulse.com/instagram/contacts/send",
           postData,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImFmMmQwNjg5ZDRiNTkxODU0ZDI0ZTgyZTE4MTU4YWE4YWFhM2NjZmJmNGE3ODgwZDgwYjRhOGVhYjM0MGE2YzdiZWJjMTY2YWY3OGE5ZTdlIn0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6ImFmMmQwNjg5ZDRiNTkxODU0ZDI0ZTgyZTE4MTU4YWE4YWFhM2NjZmJmNGE3ODgwZDgwYjRhOGVhYjM0MGE2YzdiZWJjMTY2YWY3OGE5ZTdlIiwiaWF0IjoxNzIxMzgwOTkxLCJuYmYiOjE3MjEzODA5OTEsImV4cCI6MTcyMTM4NDU5MSwic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.pMSvdQzfbTS9lztdBgsC5juAfPcDM6dTIx_tFar2Y2uya3gv3B0AmFRegZHMJM-0XF8QSOBeR3OKLHy9kG1MA4Gpgmw_ZjEDrkruKKUQ5BkPdwv5kxva2f0P2FHX_niVq57X9eNDalTxi-Cc12GG6xGYTSHR-wy1XrICxA1fOzOWLnQJv9wLxqoqox0IbW-TLjBVOg0ox3opoTJStNSVkJP-OLabHNOeF0KgcFElXsQ-zl61ZALFM4cFhjeksswbKr1HfhPkxmKZ2DTqiRjqZNnAkrCq1LY7uAGgSqvXRZbfsflvE0eZjcHY4runBS31c7NwBWcVposhZXTfOFyYSg`,
               "Content-Type": "application/json",
             },
           }
@@ -93,12 +93,15 @@ async function callAnotherApi(userData) {
             },
           ],
         };
+
+        console.log("postData", postData);
+
         const sendResponse = await axios.post(
-          process.env.SEND_INSTAGRAM_MESSAGE_URL,
+          "https://api.sendpulse.com/instagram/contacts/send",
           postData,
           {
             headers: {
-              Authorization: `Bearer ${process.env.INSTAGRAM_TOKEN}`,
+              Authorization: `Bearer `,
               "Content-Type": "application/json",
             },
           }
@@ -121,7 +124,6 @@ function storeData(data) {
   const lastMessage = data[0]?.contact.last_message;
   const contact_id = data[0]?.contact.id;
   const date = data[0]?.date;
-  console.log(data ?? [], "data ");
   return { username, lastMessage, contact_id, date };
 }
 
@@ -131,7 +133,7 @@ const inComingDetails = [];
 app.post("/webhook/incoming", async (req, res) => {
   try {
     const data = req.body;
-    // console.log(data);
+    console.log(data);
     const userData = storeData(data);
     const check = await inComingDetails.find(
       (obj) =>

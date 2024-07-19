@@ -66,7 +66,7 @@ app.post("/webhook/incoming", async (req, res) => {
 
       if (!user || user.length === 0) {
         console.log("user", user);
-        return res.sendStatus(500);
+        return res.status(500).send();
       }
     }
     // return res.sendStatus(200); // Corrected to use sendStatus

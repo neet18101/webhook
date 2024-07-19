@@ -55,6 +55,7 @@ function storeData(data) {
 app.post("/webhook/incoming", async (req, res) => {
   const data = req.body;
   const userData = storeData(data);
+  console.log(userData);
 
   try {
     if (!isNaN(userData.lastMessage)) {

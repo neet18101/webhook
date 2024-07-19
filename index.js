@@ -55,7 +55,7 @@ function storeData(data) {
 app.post("/webhook/incoming", async (req, res) => {
   const data = req.body;
   const userData = storeData(data);
-  console.log(userData);
+  console.log(userData ,"neetx");
 
   try {
     if (!isNaN(userData.lastMessage)) {
@@ -64,7 +64,7 @@ app.post("/webhook/incoming", async (req, res) => {
         .select("channel_name, otp")
         .eq("channel_name", userData?.username)
         .eq("otp", userData?.lastMessage);
-      console.log(user);
+      console.log(user , "supabase");
       if (error) {
         throw new Error(error.message);
       }

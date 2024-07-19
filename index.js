@@ -108,7 +108,7 @@ app.post("/webhook/incoming", async (req, res) => {
   try {
     const data = req.body;
     const userData = storeData(data);
-    console.log(data);
+    console.log(userData);
 
     // console.log(userData, "neet");
 

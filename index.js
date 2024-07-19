@@ -40,6 +40,7 @@ const getToken = async () => {
     throw error; // Re-throw error to be handled by the caller
   }
 };
+console.log(getToken());
 
 async function callAnotherApi(userData) {
   try {
@@ -82,10 +83,9 @@ async function callAnotherApi(userData) {
         );
 
         console.log("Response from SendPulse API:", sendResponse.data);
-        return true;
+        return response.data;
       }
 
-      return false;
     } else {
       return false;
     }
@@ -94,7 +94,6 @@ async function callAnotherApi(userData) {
     return error.message;
   }
 }
-
 
 // store data from webhook
 function storeData(data) {
@@ -116,8 +115,8 @@ app.post("/webhook/incoming", async (req, res) => {
 
     // Call another API with the stored data
     const a = await callAnotherApi(userData);
-    if(a){
-      return res.send("message gone")
+    if (a) {
+      return res.send("message gone");
     }
     return res.sendStatus(200); // Corrected to use sendStatus
   } catch (error) {

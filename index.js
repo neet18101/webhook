@@ -82,9 +82,6 @@ app.post("/webhook/incoming", async (req, res) => {
       } else {
         return res.sendStatus(200); // OK if user is found
       }
-    } else {
-      console.log("Last message is not a number:", userData.lastMessage);
-      return res.sendStatus(400); // Bad Request if lastMessage is not a number
     }
   } catch (error) {
     console.error("Error processing webhook:", error);

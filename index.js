@@ -96,6 +96,12 @@ async function callAnotherApi(userData) {
 
         console.log("postData", postData);
 
+        const { data: user, error } = await supabase
+          .from("channels")
+          .update({ is_verified: true })
+          .select("*")
+          .eq("channel_name", userData?.username);
+
         const sendResponse = await axios.post(
           "https://api.sendpulse.com/instagram/contacts/send",
           postData,

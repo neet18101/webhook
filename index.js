@@ -136,7 +136,7 @@ app.post("/webhook/incoming", async (req, res) => {
     const data = req.body;
     console.log(data)
     const userData = storeData(data);
-    const check = await inComingDetails.find((obj) => obj.contact_id === userData.contact_id);
+    const check = await inComingDetails.find((obj) => obj.contact_id === userData.contact_id && obj.lastMessage === userData.lastMessage);
     console.log(check, "neet", userData, inComingDetails);
     if(check){
       return res.sendStatus(200);

@@ -77,12 +77,8 @@ app.post("/webhook/incoming", async (req, res) => {
         .eq("otp", userData?.lastMessage);
       console.log("Supabase response:", user);
 
-      if (error) {
-        throw new Error(error.message);
-      }
-
       if (!user || user.length === 0) {
-        return res.sendStatus(405); // Method Not Allowed if user not found
+        return res.sendStatus(200); // Method Not Allowed if user not found
       } else {
         return res.sendStatus(200); // OK if user is found
       }

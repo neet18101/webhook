@@ -53,55 +53,24 @@ function storeData(data) {
 
 // Endpoint to receive incoming messages
 app.post("/webhook/incoming", async (req, res) => {
-  try {
-    const startTime = Date.now();
-    console.log("Received webhook:", req.body);
-
-    const data = req.body;
-    const userData = storeData(data);
-    console.log("Parsed user data:", userData);
-
-    // Measure time taken to parse user data
-    const parseTime = Date.now();
-    console.log("Time taken to parse data:", parseTime - startTime, "ms");
-
-    if (!isNaN(userData.lastMessage)) {
-      const queryStartTime = Date.now();
-      const { data: user, error } = await supabase
-        .from("channels")
-        .select("channel_name, otp")
-        .eq("channel_name", userData?.username)
-        .eq("otp", userData?.lastMessage);
-
-      // Measure time taken for Supabase query
-      const queryEndTime = Date.now();
-      console.log(
-        "Time taken for Supabase query:",
-        queryEndTime - queryStartTime,
-        "ms"
-      );
-
-      if (error) {
-        console.error("Error fetching user:", error.message);
-        return res.status(500).send(error.message);
-      }
-
-      console.log("Fetched user:", user);
-      if (!user || user.length === 0) {
-        console.log("No matching user found:", user);
-        return res.status(500).send();
+  const data = req.body;
+  const userData = storeData(data);
+  // console.log(userData?.lastMessage);
+  if (!isNaN(userData.lastMessage)) {
+    const { data: user, error } = await supabase
+      .from("channels")
+      .select("channel_name, otp")
+      .eq("channel_name", userData?.username)
+      .eq("otp", userData?.lastMessage);
+    if (!user || user.length === 0) {
+      try {
+        return res.sendStatus(500);
+      } catch (error) {
+        console.log(error);
       }
     }
-
-    // Measure total time taken for the request
-    const endTime = Date.now();
-    console.log("Total time taken:", endTime - startTime, "ms");
-
-    return res.sendStatus(200); // Corrected to use sendStatus
-  } catch (error) {
-    console.log("Error handling webhook:", error);
-    return res.status(500).send(error.message);
   }
+  // return res.sendStatus(200); // Corrected to use sendStatus
 });
 
 // Endpoint to send outgoing messages

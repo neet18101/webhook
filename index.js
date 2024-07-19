@@ -95,17 +95,18 @@ async function callAnotherApi(userData) {
             .from("channels")
             .update({ is_verified: true })
             .eq("id", user[0].id);
-          const postData = {
-            contact_id: userData.contact_id,
-            messages: [
-              {
-                type: "text",
-                message: {
-                  text: "Otp Verified Successful 🎉🎉",
-                },
-              },
-            ],
-          };
+            console.log(updateUser)
+          // const postData = {
+          //   contact_id: userData.contact_id,
+          //   messages: [
+          //     {
+          //       type: "text",
+          //       message: {
+          //         text: "Otp Verified Successful 🎉🎉",
+          //       },
+          //     },
+          //   ],
+          // };
           // const sendResponse = await axios.post(
           //   "https://api.sendpulse.com/instagram/contacts/send",
           //   postData,

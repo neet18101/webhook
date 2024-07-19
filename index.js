@@ -76,7 +76,7 @@ async function callAnotherApi(userData) {
           postData,
           {
             headers: {
-              Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImM2MTRlYjZiMzMyNjM2OTdlZWU1Yzg5MDJhYjc4YzU5NTNlZTQ2ZjEwYjk4ZDRhNDBiMmFlYzY0MDIzZTkyOWNiOWY5ZDYyZmM1YmRmZGFhIn0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6ImM2MTRlYjZiMzMyNjM2OTdlZWU1Yzg5MDJhYjc4YzU5NTNlZTQ2ZjEwYjk4ZDRhNDBiMmFlYzY0MDIzZTkyOWNiOWY5ZDYyZmM1YmRmZGFhIiwiaWF0IjoxNzIxMzA5NjU2LCJuYmYiOjE3MjEzMDk2NTYsImV4cCI6MTcyMTMxMzI1Niwic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.yRp-kI4j2JZR7S2pyA1cyd890WktHY4quWk9caM8e9euk-7DJ3znVvytmGbdXcDvipSh5MxqUEOF70sL33g3uaJvh4WPrvu1MAKJr4T72n7pnz3eu6UOkYiB26KLSGGjw4X4zqV6ih8WFJjg4lMCywefVx8w9XxBpQdovdXhDU0jiHkLj-D4GOGVpCojL_1I5B9hwXw8igRt1sqw3yp2yKp8_O4yw2vm2Tlwph8dAAogHSQphSJos90VrUuVAYrJevv4C6dIHnQPjmqIKyG9_9oa7rUqask7sYAyQt9NgjgofpdX52yQ9mb1I0j0gvX4pieiL6AG8OpqIXv0o3OLZw`,
+              Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjZhYWQzMGMxODAyNjMzODRhZmFiYWViYzc2NGM3NTcxMjNkNzk1ODE5NzZhMDllNGY1YmMwMjIzZjljZjkyMDNlY2E2MmI0MWQ3ZGY2ZjM0In0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6IjZhYWQzMGMxODAyNjMzODRhZmFiYWViYzc2NGM3NTcxMjNkNzk1ODE5NzZhMDllNGY1YmMwMjIzZjljZjkyMDNlY2E2MmI0MWQ3ZGY2ZjM0IiwiaWF0IjoxNzIxMzY2NDUwLCJuYmYiOjE3MjEzNjY0NTAsImV4cCI6MTcyMTM3MDA1MCwic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.jV0T8rr2adI1n410rXlxTSqg0Y1qxSVgeG6tpng5IY2XL5UgSCgPGgzcL1gXcw0b2dI35sGLuBah885QUuGVa_X3eLH4sLmufUzps8raPRex-9EYfNvKQI75TT7M5gX6JzzM6MUp9gdQFIemOleFDCpzssqCnDZATk7eFSNV4QJDOl3rPFODnaS86Od4UlZK7BVe95vKYZ0eMY6FzEQz9VP4ALIBkfRZLDVL3Nor0f8Ep6bLR8cL_KdtOJBNoznFHJyzQ1EIu5Aa6Tb2EM-1mgLR0e7Jz_tulxJvI5fZqm0EiQww5-6Pj6zcbOM9_TXtQ-FyvufNKXCsaMhZNkpaGg`,
               "Content-Type": "application/json",
             },
           }
@@ -85,7 +85,6 @@ async function callAnotherApi(userData) {
         console.log("Response from SendPulse API:", sendResponse.data);
         return response.data;
       }
-
     } else {
       return false;
     }

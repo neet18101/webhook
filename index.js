@@ -82,36 +82,39 @@ async function callAnotherApi(userData) {
         console.log("Response from SendPulse API:", sendResponse.data);
         return true;
       } else {
-        const postData = {
-          contact_id: userData.contact_id,
-          messages: [
-            {
-              type: "text",
-              message: {
-                text: "Otp Verified Successful 🎉🎉",
-              },
-            },
-          ],
-        };
-
-        console.log("postData", postData);
-
         const { data: user, error } = await supabase
           .from("channels")
-          .update({ is_verified: true })
-          .select("*")
-          .eq("channel_name", userData?.username);
-
-        const sendResponse = await axios.post(
-          "https://api.sendpulse.com/instagram/contacts/send",
-          postData,
-          {
-            headers: {
-              Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImM4MDMyMzMzOWFiNzI3MTVjODFhMGQ2NWFmNjhhZTIwNGI1ZTZkNzZlMzQyNmZkNDM2OGZkOGUwMjRhOTY4ZGY2ODE1YTA2ODIxNGNjM2IwIn0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6ImM4MDMyMzMzOWFiNzI3MTVjODFhMGQ2NWFmNjhhZTIwNGI1ZTZkNzZlMzQyNmZkNDM2OGZkOGUwMjRhOTY4ZGY2ODE1YTA2ODIxNGNjM2IwIiwiaWF0IjoxNzIxMzg2OTU2LCJuYmYiOjE3MjEzODY5NTYsImV4cCI6MTcyMTM5MDU1Niwic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.yy4VZXkekEj6agzaNVjRFPn1UNLGgEqS16i4ds4Bpw-JG6LGRNk6gbIKpBGiZhe8BNZiGlYhEM8agn12P9v-Nvbl7wjxkg1effj8eeFE7ghnLe94u5bCg3v1uk08iD0UYcz8nEgEqfX9mmW8Ug9T4BSHGoPZm7RaYSgzp9gRQMFkZ0dEoqMNwY8MLZ5i5Q1xiHi2QDq1l6nimJN4UpcoVn82vfkUUHp40oxqsew0rmVvW9cZ6ww0zr4YOF-N0ZLQH6AA3t5qd75XZUbmwqkLrk2bYkfU-6kuUY3xkxNpEuoFnnoCCH4WlRQEY_pWiJEXfWKPu1LuMwDlq6HkP2XOGg`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+          .eq("channel_name", userData?.username)
+          .eq("is_verified", true);
+        if (user.length > 0) {
+          return true;
+        } else {
+          const { data: updateUser, error } = await supabase
+            .from("channels")
+            .update({ "is_verified": true })
+            .eq("channel_name", userData?.username);
+          const postData = {
+            contact_id: userData.contact_id,
+            messages: [
+              {
+                type: "text",
+                message: {
+                  text: "Otp Verified Successful 🎉🎉",
+                },
+              },
+            ],
+          };
+          // const sendResponse = await axios.post(
+          //   "https://api.sendpulse.com/instagram/contacts/send",
+          //   postData,
+          //   {
+          //     headers: {
+          //       Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImM4MDMyMzMzOWFiNzI3MTVjODFhMGQ2NWFmNjhhZTIwNGI1ZTZkNzZlMzQyNmZkNDM2OGZkOGUwMjRhOTY4ZGY2ODE1YTA2ODIxNGNjM2IwIn0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6ImM4MDMyMzMzOWFiNzI3MTVjODFhMGQ2NWFmNjhhZTIwNGI1ZTZkNzZlMzQyNmZkNDM2OGZkOGUwMjRhOTY4ZGY2ODE1YTA2ODIxNGNjM2IwIiwiaWF0IjoxNzIxMzg2OTU2LCJuYmYiOjE3MjEzODY5NTYsImV4cCI6MTcyMTM5MDU1Niwic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.yy4VZXkekEj6agzaNVjRFPn1UNLGgEqS16i4ds4Bpw-JG6LGRNk6gbIKpBGiZhe8BNZiGlYhEM8agn12P9v-Nvbl7wjxkg1effj8eeFE7ghnLe94u5bCg3v1uk08iD0UYcz8nEgEqfX9mmW8Ug9T4BSHGoPZm7RaYSgzp9gRQMFkZ0dEoqMNwY8MLZ5i5Q1xiHi2QDq1l6nimJN4UpcoVn82vfkUUHp40oxqsew0rmVvW9cZ6ww0zr4YOF-N0ZLQH6AA3t5qd75XZUbmwqkLrk2bYkfU-6kuUY3xkxNpEuoFnnoCCH4WlRQEY_pWiJEXfWKPu1LuMwDlq6HkP2XOGg`,
+          //       "Content-Type": "application/json",
+          //     },
+          //   }
+          // );
+        }
 
         return true;
       }

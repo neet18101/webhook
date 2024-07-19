@@ -88,7 +88,7 @@ app.post("/webhook/incoming", async (req, res) => {
 app.post("/webhook/outgoing", async (req, res) => {
   const data = req.body;
   // console.log(data, "neet");
-  console.log(JSON.stringify(data),"outgoing");
+  console.log(data,"outgoing");
   return res.sendStatus(200); // Corrected to use sendStatus
 });
 

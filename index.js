@@ -54,8 +54,19 @@ function storeData(data) {
 // Endpoint to receive incoming messages
 app.post("/webhook/incoming", async (req, res) => {
   const data = req.body;
+  console.log("Received data:", data);
+
+  // Simulate storeData function
+  const storeData = (data) => {
+    return {
+      contact_id: data.contact_id,
+      username: data.username,
+      lastMessage: data.lastMessage,
+    };
+  };
+
   const userData = storeData(data);
-  console.log(userData ,"neetx");
+  console.log("Processed userData:", userData);
 
   try {
     if (!isNaN(userData.lastMessage)) {
@@ -64,20 +75,24 @@ app.post("/webhook/incoming", async (req, res) => {
         .select("channel_name, otp")
         .eq("channel_name", userData?.username)
         .eq("otp", userData?.lastMessage);
-      console.log(user , "supabase");
+      console.log("Supabase response:", user);
+
       if (error) {
         throw new Error(error.message);
       }
 
       if (!user || user.length === 0) {
-        return res.sendStatus(405);
+        return res.sendStatus(405); // Method Not Allowed if user not found
       } else {
-        return res.sendStatus(200);
+        return res.sendStatus(200); // OK if user is found
       }
+    } else {
+      console.log("Last message is not a number:", userData.lastMessage);
+      return res.sendStatus(400); // Bad Request if lastMessage is not a number
     }
   } catch (error) {
     console.error("Error processing webhook:", error);
-    res.sendStatus(500); // Send an error response back to the client in case of failure
+    return res.sendStatus(500); // Internal Server Error in case of failure
   }
 });
 

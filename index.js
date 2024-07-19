@@ -33,14 +33,14 @@ const getToken = async () => {
     );
 
     const accessToken = response.data.access_token;
-    console.log("Access Token:", accessToken);
+    // console.log("Access Token:", accessToken);
     return accessToken;
   } catch (error) {
     console.error("Error obtaining access token:", error);
     throw error; // Re-throw error to be handled by the caller
   }
 };
-console.log(getToken());
+// console.log(getToken());
 
 // store data from webhook
 function storeData(data) {
@@ -104,7 +104,7 @@ app.post("/webhook/incoming", async (req, res) => {
 // Endpoint to send outgoing messages
 app.post("/webhook/outgoing", async (req, res) => {
   const data = req.body;
-  console.log(data, "neet");
+  // console.log(data, "neet");
   return res.sendStatus(200); // Corrected to use sendStatus
 });
 

@@ -90,7 +90,7 @@ app.post("/webhook/incoming", async (req, res) => {
         //   }
         // );
 
-        return res.sendStatus(400);
+        return res.sendStatus(500);
       }
     }
 

@@ -91,7 +91,7 @@ async function callAnotherApi(userData) {
         } else {
           const { data: updateUser, error } = await supabase
             .from("channels")
-            .update({ "is_verified": true })
+            .update({ is_verified: true })
             .eq("channel_name", userData?.username);
           const postData = {
             contact_id: userData.contact_id,

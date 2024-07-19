@@ -60,40 +60,14 @@ app.post("/webhook/incoming", async (req, res) => {
     if (!isNaN(userData.lastMessage)) {
       const { data: user, error } = await supabase
         .from("channels")
-        .select("*")
+        .select("channel_name, otp")
         .eq("channel_name", userData?.username)
         .eq("otp", userData?.lastMessage);
-      if (error) {
-        console.error("Error fetching user:", error.message);
-        return error.message;
-      }
+      console.log("user", user);
       if (!user || user.length === 0) {
-        // const postData = {
-        //   contact_id: userData.contact_id,
-        //   messages: [
-        //     {
-        //       type: "text",
-        //       message: {
-        //         text: "Account not verified. please make sure that the verification code and Instagram account are connected",
-        //       },
-        //     },
-        //   ],
-        // };
-        // const sendResponse = await axios.post(
-        //   "https://api.sendpulse.com/instagram/contacts/send",
-        //   postData,
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjZhYWQzMGMxODAyNjMzODRhZmFiYWViYzc2NGM3NTcxMjNkNzk1ODE5NzZhMDllNGY1YmMwMjIzZjljZjkyMDNlY2E2MmI0MWQ3ZGY2ZjM0In0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6IjZhYWQzMGMxODAyNjMzODRhZmFiYWViYzc2NGM3NTcxMjNkNzk1ODE5NzZhMDllNGY1YmMwMjIzZjljZjkyMDNlY2E2MmI0MWQ3ZGY2ZjM0IiwiaWF0IjoxNzIxMzY2NDUwLCJuYmYiOjE3MjEzNjY0NTAsImV4cCI6MTcyMTM3MDA1MCwic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.jV0T8rr2adI1n410rXlxTSqg0Y1qxSVgeG6tpng5IY2XL5UgSCgPGgzcL1gXcw0b2dI35sGLuBah885QUuGVa_X3eLH4sLmufUzps8raPRex-9EYfNvKQI75TT7M5gX6JzzM6MUp9gdQFIemOleFDCpzssqCnDZATk7eFSNV4QJDOl3rPFODnaS86Od4UlZK7BVe95vKYZ0eMY6FzEQz9VP4ALIBkfRZLDVL3Nor0f8Ep6bLR8cL_KdtOJBNoznFHJyzQ1EIu5Aa6Tb2EM-1mgLR0e7Jz_tulxJvI5fZqm0EiQww5-6Pj6zcbOM9_TXtQ-FyvufNKXCsaMhZNkpaGg`,
-        //       "Content-Type": "application/json",
-        //     },
-        //   }
-        // );
-
         res.sendStatus(500);
       }
     }
-
     // return res.sendStatus(200); // Corrected to use sendStatus
   } catch (error) {
     console.log(error);

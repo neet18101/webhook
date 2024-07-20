@@ -55,7 +55,12 @@ const getNewMessages = async () => {
 
   threads.forEach((thread) => {
     thread.items.forEach((message) => {
-      console.log("neet:", message?.media_share);
+      console.log(message?.item_type === "media_share","luciferlord");
+      console.log(
+        "neet:",
+        message?.media_share?.user?.profile_pic_url,
+        message?.media_share?.injected?.ad_id
+      );
     });
   });
 };

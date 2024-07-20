@@ -55,11 +55,19 @@ const getNewMessages = async () => {
 
   threads.forEach((thread) => {
     thread.items.forEach((message) => {
-      console.log(message?.item_type === "media_share","luciferlord");
+      if (message.media_type === 8) {
+        for (const carouselItem of message.carousel_media) {
+          if (carouselItem.media_type === 1) {
+            console.log(
+              `Carousel Photo URL: ${carouselItem.image_versions2.candidates[0].url}`
+            );
+          }
+        }
+      }
       console.log(
         "neet:",
         message?.media_share?.user?.profile_pic_url,
-        message?.media_share?.injected?.ad_id
+        message?.media_share?.injected
       );
     });
   });

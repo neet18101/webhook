@@ -44,21 +44,11 @@ const getToken = async () => {
 // get ads
 const getNewMessages = async () => {
   const ig = new IgApiClient();
-  ig.state.generateDevice(process.env.IG_USERNAME);
-  console.log("IG_USERNAME:", process.env.IG_USERNAME);
-  console.log(
-    "IG_PASSWORD:",
-    process.env.IG_PASSWORD ? "Loaded" : "Not Loaded"
-  );
+  ig.state.generateDevice("heystak.io");
+  console.log("IG_USERNAME:", "heystak.io");
+  console.log("IG_PASSWORD:", "Heystal12!" ? "Loaded" : "Not Loaded");
 
-  if (!process.env.IG_USERNAME || !process.env.IG_PASSWORD) {
-    console.error(
-      "Instagram credentials are not set in the environment variables."
-    );
-    return;
-  }
-
-  await ig.account.login(process.env.IG_USERNAME, process.env.IG_PASSWORD);
+  await ig.account.login("heystak.io", "Heystal12!");
 
   const inboxFeed = ig.feed.directInbox();
   const threads = await inboxFeed.items();

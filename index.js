@@ -2,7 +2,7 @@ const express = require("express");
 const axios = require("axios");
 const app = express();
 app.use(express.json());
-var sendpulse = require("sendpulse-api");
+const { IgApiClient } = require("instagram-private-api");
 
 // Initialize Supabase client
 const { createClient } = require("@supabase/supabase-js");
@@ -41,8 +41,34 @@ const getToken = async () => {
   }
 };
 
-console.log(getToken());
+// get ads
+const getNewMessages = async () => {
+  const ig = new IgApiClient();
+  ig.state.generateDevice(process.env.IG_USERNAME);
+  console.log("IG_USERNAME:", process.env.IG_USERNAME);
+  console.log(
+    "IG_PASSWORD:",
+    process.env.IG_PASSWORD ? "Loaded" : "Not Loaded"
+  );
 
+  if (!process.env.IG_USERNAME || !process.env.IG_PASSWORD) {
+    console.error(
+      "Instagram credentials are not set in the environment variables."
+    );
+    return;
+  }
+
+  await ig.account.login(process.env.IG_USERNAME, process.env.IG_PASSWORD);
+
+  const inboxFeed = ig.feed.directInbox();
+  const threads = await inboxFeed.items();
+
+  threads.forEach((thread) => {
+    thread.items.forEach((message) => {
+      console.log(message?.media_share);
+    });
+  });
+};
 async function callAnotherApi(userData) {
   try {
     if (!isNaN(userData.lastMessage)) {
@@ -75,7 +101,7 @@ async function callAnotherApi(userData) {
           postData,
           {
             headers: {
-              Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjJhODIyYTM0MTllNDBlZmFiM2E4NzIzOTNmMTkxYzY3ZjdhMmQwMTFhMDUxN2I0MDUzMmNlMTAxODljMmU0MmU1MjI1NmViNjIyMjE1OGI1In0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6IjJhODIyYTM0MTllNDBlZmFiM2E4NzIzOTNmMTkxYzY3ZjdhMmQwMTFhMDUxN2I0MDUzMmNlMTAxODljMmU0MmU1MjI1NmViNjIyMjE1OGI1IiwiaWF0IjoxNzIxNDU3MzAyLCJuYmYiOjE3MjE0NTczMDIsImV4cCI6MTcyMTQ2MDkwMiwic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.kboBFl4_KuzBwpVq4q81j2lSXv3gkaX0digChc3NNSm7tkYc-jrFRucRBxraWt9CJ-TSTYQJxVSGbTX8HgubkvVGF5KSsug961Oa3hfTBe7BSE7Dd7XkDOabPjTvP9mdIBbvT9j0GQd9JzLhT-F2oGFJtnBzeDUtdnW11cXowbPyc9fR1QIqnbkQo2Onf6ETctHEwFChDEAInaKl09_Afrxhv0qpsRMDwO54_NS6nvIsvJJDDF7buY-7fNexiptcn6L2smPyAd8Pgqb2XlWcF43ALWO_4UyRg7NRuFcYL6hZNfS6V07GdVXgEVK3e-m8KU9Zm_fkX4QZVoZbIgn7Rg`,
+              Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjgzNmQzNDQxMWJhYmZjNTM5MDc1ODhhODExYTAwMzFkMDQwNWJmOWRiZWY3NDJlZTY2MWE5NWZkMDVmOWNjODlhZTA0YWYzNzM2ZmEzZjFkIn0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6IjgzNmQzNDQxMWJhYmZjNTM5MDc1ODhhODExYTAwMzFkMDQwNWJmOWRiZWY3NDJlZTY2MWE5NWZkMDVmOWNjODlhZTA0YWYzNzM2ZmEzZjFkIiwiaWF0IjoxNzIxMzkwOTI3LCJuYmYiOjE3MjEzOTA5MjcsImV4cCI6MTcyMTM5NDUyNywic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.XIdZyo8mGBdrYBwyds1f2vJKuvI5wAwBqrcmIlZqmyT6bsWqbzn1UoyVcZ6lrLEiEuaTUzclAXNsy-cefmkyUSR6s1PZ_uTaqTf-0U0y3Z6j015DYnEG5vliwbIL2jh139stVQ8UmtLUacL_KZpJeRx0QbFwz6qKK5R01RCEnQ2f805J2EvnVgw3lqrJfPrcpw7O3IZ6GjGwKbLRA-IZtSM0rN4_aKPcPVTJXylUKpBJvnUbklRnR_67aKMdUjWO7p7uxppRx1I7kRzwmdL7tsCYcpfjQ7PpYXTKBD_bHYn_ycKAnjlazp5nZauvMRBIXI7sP_FApYZRVKKLLwbhAw`,
               "Content-Type": "application/json",
             },
           }
@@ -92,7 +118,7 @@ async function callAnotherApi(userData) {
         if (user[0].is_verified) {
           return true;
         } else {
-          // console.log(user[0]?.id);
+          console.log(user[0]?.id);
           const { data: updateUser, error } = await supabase
             .from("channels")
             .update({ is_verified: true })
@@ -114,7 +140,7 @@ async function callAnotherApi(userData) {
             postData,
             {
               headers: {
-                Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjJhODIyYTM0MTllNDBlZmFiM2E4NzIzOTNmMTkxYzY3ZjdhMmQwMTFhMDUxN2I0MDUzMmNlMTAxODljMmU0MmU1MjI1NmViNjIyMjE1OGI1In0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6IjJhODIyYTM0MTllNDBlZmFiM2E4NzIzOTNmMTkxYzY3ZjdhMmQwMTFhMDUxN2I0MDUzMmNlMTAxODljMmU0MmU1MjI1NmViNjIyMjE1OGI1IiwiaWF0IjoxNzIxNDU3MzAyLCJuYmYiOjE3MjE0NTczMDIsImV4cCI6MTcyMTQ2MDkwMiwic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.kboBFl4_KuzBwpVq4q81j2lSXv3gkaX0digChc3NNSm7tkYc-jrFRucRBxraWt9CJ-TSTYQJxVSGbTX8HgubkvVGF5KSsug961Oa3hfTBe7BSE7Dd7XkDOabPjTvP9mdIBbvT9j0GQd9JzLhT-F2oGFJtnBzeDUtdnW11cXowbPyc9fR1QIqnbkQo2Onf6ETctHEwFChDEAInaKl09_Afrxhv0qpsRMDwO54_NS6nvIsvJJDDF7buY-7fNexiptcn6L2smPyAd8Pgqb2XlWcF43ALWO_4UyRg7NRuFcYL6hZNfS6V07GdVXgEVK3e-m8KU9Zm_fkX4QZVoZbIgn7Rg`,
+                Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjgzNmQzNDQxMWJhYmZjNTM5MDc1ODhhODExYTAwMzFkMDQwNWJmOWRiZWY3NDJlZTY2MWE5NWZkMDVmOWNjODlhZTA0YWYzNzM2ZmEzZjFkIn0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6IjgzNmQzNDQxMWJhYmZjNTM5MDc1ODhhODExYTAwMzFkMDQwNWJmOWRiZWY3NDJlZTY2MWE5NWZkMDVmOWNjODlhZTA0YWYzNzM2ZmEzZjFkIiwiaWF0IjoxNzIxMzkwOTI3LCJuYmYiOjE3MjEzOTA5MjcsImV4cCI6MTcyMTM5NDUyNywic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.XIdZyo8mGBdrYBwyds1f2vJKuvI5wAwBqrcmIlZqmyT6bsWqbzn1UoyVcZ6lrLEiEuaTUzclAXNsy-cefmkyUSR6s1PZ_uTaqTf-0U0y3Z6j015DYnEG5vliwbIL2jh139stVQ8UmtLUacL_KZpJeRx0QbFwz6qKK5R01RCEnQ2f805J2EvnVgw3lqrJfPrcpw7O3IZ6GjGwKbLRA-IZtSM0rN4_aKPcPVTJXylUKpBJvnUbklRnR_67aKMdUjWO7p7uxppRx1I7kRzwmdL7tsCYcpfjQ7PpYXTKBD_bHYn_ycKAnjlazp5nZauvMRBIXI7sP_FApYZRVKKLLwbhAw`,
                 "Content-Type": "application/json",
               },
             }
@@ -148,7 +174,7 @@ const inComingDetails = [];
 app.post("/webhook/incoming", async (req, res) => {
   try {
     const data = req.body;
-    console.log(JSON.stringify(data[0]), data);
+    console.log(data[0]?.info?.message, data);
     const userData = storeData(data);
     const check = await inComingDetails.find(
       (obj) =>
@@ -160,7 +186,8 @@ app.post("/webhook/incoming", async (req, res) => {
       return res.sendStatus(200);
     } else {
       inComingDetails.push(userData);
-      await callAnotherApi(userData);
+      await getNewMessages();
+      // await callAnotherApi(userData);
     }
     // console.log(userData, "neet");
     // Call another API with the stored data

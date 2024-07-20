@@ -53,9 +53,26 @@ const getNewMessages = async () => {
   const inboxFeed = ig.feed.directInbox();
   const threads = await inboxFeed.items();
 
+  // A set to keep track of processed message IDs
+  const processedMessageIds = new Set();
+
+  // Load processed message IDs from storage (this is just an example)
+  // In a real application, you would load this from a database or file
+  // const processedMessageIds = new Set(loadProcessedMessageIdsFromStorage());
+
   threads.forEach((thread) => {
     thread.items.forEach((message) => {
-      console.log(message);
+      if (!processedMessageIds.has(message.item_id)) {
+        // Process the new message
+        console.log("New message:", message.item_type);
+
+        // Add the message ID to the set of processed IDs
+        processedMessageIds.add(message.item_id);
+
+        // Save the processed message ID to storage (this is just an example)
+        // In a real application, you would save this to a database or file
+        // saveProcessedMessageIdToStorage(message.item_id);
+      }
     });
   });
 };

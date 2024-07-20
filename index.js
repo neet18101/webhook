@@ -67,7 +67,7 @@ const getNewMessages = async () => {
       console.log(
         "neet:",
         message?.media_share?.user?.profile_pic_url,
-        message?.media_share?.injected
+        message?.media_share?.injected?.ad_id
       );
     });
   });

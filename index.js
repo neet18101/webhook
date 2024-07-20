@@ -148,7 +148,7 @@ const inComingDetails = [];
 app.post("/webhook/incoming", async (req, res) => {
   try {
     const data = req.body;
-    console.log(data[0]?.info?.message, data);
+    console.log(data[0]?.info?.message?.attachments, data);
     const userData = storeData(data);
     const check = await inComingDetails.find(
       (obj) =>

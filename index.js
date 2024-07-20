@@ -55,7 +55,7 @@ const getNewMessages = async () => {
 
   threads.forEach((thread) => {
     thread.items.forEach((message) => {
-      console.log(message?.media_share);
+      console.log("neet:", message?.media_share);
     });
   });
 };

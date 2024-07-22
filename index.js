@@ -40,15 +40,16 @@ const getToken = async () => {
     throw error; // Re-throw error to be handled by the caller
   }
 };
+const ig = new IgApiClient();
+ig.state.generateDevice("heystak.io");
+console.log("IG_USERNAME:", "heystak.io");
+console.log("IG_PASSWORD:", "Heystak12!" ? "Loaded" : "Not Loaded");
+
+ig.account.login("luciferlord999", "yadav@123#");
 
 // get ads
 const getNewMessages = async () => {
-  const ig = new IgApiClient();
-  ig.state.generateDevice("heystak.io");
-  console.log("IG_USERNAME:", "heystak.io");
-  console.log("IG_PASSWORD:", "Heystak12!" ? "Loaded" : "Not Loaded");
 
-  await ig.account.login("heystak.io", "Heystak12!");
 
   const inboxFeed = ig.feed.directInbox();
   const threads = await inboxFeed.items();

@@ -213,22 +213,24 @@ const inComingDetails = [];
 app.post("/webhook/incoming", async (req, res) => {
   try {
     const data = req.body;
-    console.log(data[0]?.info?.message, data);
-    const userData = storeData(data);
-    const check = await inComingDetails.find(
-      (obj) =>
-        obj.contact_id === userData.contact_id &&
-        obj.lastMessage === userData.lastMessage
-    );
+    // console.log(data[0]?.info?.message, data);
+    console.log(data)
+    // const userData = storeData(data);
+    // const check = await inComingDetails.find(
+    //   (obj) =>
+    //     obj.contact_id === userData.contact_id &&
+    //     obj.lastMessage === userData.lastMessage
+    // );
+    // const messageIdCheck = lastMessage
 
-    // console.log(check, "neet", = userData, inComingDetails);
-    if (check) {
-      return res.sendStatus(200);
-    } else {
-      inComingDetails.push(userData);
-      await getNewMessages();
-      // await callAnotherApi(userData);
-    }
+    // // console.log(check, "neet", = userData, inComingDetails);
+    // if (check) {
+    //   return res.sendStatus(200);
+    // } else {
+    //   inComingDetails.push(userData);
+    //   await getNewMessages();
+    //   // await callAnotherApi(userData);
+    // }
     // console.log(userData, "neet");
     // Call another API with the stored data
 

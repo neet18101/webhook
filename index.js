@@ -3,7 +3,6 @@ const axios = require("axios");
 const app = express();
 app.use(express.json());
 const { IgApiClient } = require("instagram-private-api");
-const ig = new IgApiClient();
 
 // Initialize Supabase client
 const { createClient } = require("@supabase/supabase-js");
@@ -43,71 +42,40 @@ const getToken = async () => {
 };
 
 // get ads
-const processedMessageIds = new Set();
-let botUserId;
-let lastProcessedTimestamp = 0;
-// const ig = new IgApiClient();
-console.log(processedMessageIds, "hello");
-
-const handleIncomingMessage = async (
-  threadId,
-  messageId,
-  text,
-  userId,
-  itemType,
-  mediaDetails,
-  timestamp
-) => {
-  if (processedMessageIds.has(messageId)) {
-    return;
-  }
-
-  processedMessageIds.add(messageId);
-  console.log(processedMessageIds, "insideMessage", userId);
-
-  if (itemType === "media_share" && mediaDetails) {
-    console.log(`Media type: ${mediaDetails.media_type}`);
-    if (mediaDetails.media_type === 1) {
-      console.log(
-        `Image URL: ${mediaDetails.image_versions2.candidates[0].url}`
-      );
-    } else {
-      console.log(mediaDetails?.media_type);
-    }
-  }
-  lastProcessedTimestamp = timestamp;
-};
 const getNewMessages = async () => {
+  const ig = new IgApiClient();
   ig.state.generateDevice("heystak.io");
   console.log("IG_USERNAME:", "heystak.io");
   console.log("IG_PASSWORD:", "Heystak12!" ? "Loaded" : "Not Loaded");
 
-  const loggedInUser = await ig.account.login("heystak.io", "Heystak12!");
-  botUserId = loggedInUser.pk;
+  await ig.account.login("heystak.io", "Heystak12!");
 
   const inboxFeed = ig.feed.directInbox();
   const threads = await inboxFeed.items();
 
-  for (const thread of threads) {
-    const messages = thread.items.reverse(); // Process oldest to newest
-    for (const message of messages) {
-      const messageTimestamp = message.timestamp / 1000; // Convert to seconds if needed
-      if (
-        messageTimestamp > lastProcessedTimestamp &&
-        message.user_id !== botUserId
-      ) {
-        await handleIncomingMessage(
-          thread.thread_id,
-          message.item_id,
-          message.text || "",
-          message.user_id,
-          message.item_type,
-          message.media_share,
-          messageTimestamp
-        );
+  // A set to keep track of processed message IDs
+  const processedMessageIds = new Set();
+
+  // Load processed message IDs from storage (this is just an example)
+  // In a real application, you would load this from a database or file
+  // const processedMessageIds = new Set(loadProcessedMessageIdsFromStorage());
+
+  threads.forEach((thread) => {
+    thread.items.forEach((message) => {
+      if (!processedMessageIds.has(message.item_id)) {
+        // Process the new message
+        console.log("New message:", message.media_share);
+        console.log("New message:", processedMessageIds);
+
+        // Add the message ID to the set of processed IDs
+        processedMessageIds.add(message.item_id);
+
+        // Save the processed message ID to storage (this is just an example)
+        // In a real application, you would save this to a database or file
+        // saveProcessedMessageIdToStorage(message.item_id);
       }
-    }
-  }
+    });
+  });
 };
 async function callAnotherApi(userData) {
   try {
@@ -221,8 +189,7 @@ app.post("/webhook/incoming", async (req, res) => {
         obj.contact_id === userData.contact_id &&
         obj.lastMessage === userData.lastMessage
     );
-
-    // console.log(check, "neet", = userData, inComingDetails);
+    // console.log(check, "neet", userData, inComingDetails);
     if (check) {
       return res.sendStatus(200);
     } else {

@@ -5,6 +5,7 @@ app.use(express.json());
 const { IgApiClient } = require("instagram-private-api");
 const ig = new IgApiClient();
 const processedMessages = new Set(); // Set to store processed message IDs
+let botUserId; // Store the bot's user ID
 
 // Initialize Supabase client
 const { createClient } = require("@supabase/supabase-js");
@@ -124,6 +125,8 @@ const getNewMessages = async () => {
   console.log("IG_PASSWORD:", "Heystak12!" ? "Loaded" : "Not Loaded");
 
   await ig.account.login("heystak.io", "Heystak12!");
+
+  const botUserId = ig.account.getId();
 
   const inboxFeed = ig.feed.directInbox();
   const threads = await inboxFeed.items();

@@ -74,28 +74,26 @@ const handleIncomingMessage = async (
       console.log(
         `Image URL: ${mediaDetails.image_versions2.candidates[0].url}`
       );
-    } else if (mediaDetails.media_type === 2) {
-      console.log(`Video URL: ${mediaDetails.video_versions[0].url}`);
-    } else if (mediaDetails.media_type === 8) {
-      for (const carouselItem of mediaDetails.carousel_media) {
-        if (carouselItem.media_type === 1) {
-          console.log(
-            `Carousel Photo URL: ${carouselItem.image_versions2.candidates[0].url}`
-          );
-        } else if (carouselItem.media_type === 2) {
-          console.log(
-            `Carousel Video URL: ${carouselItem.video_versions[0].url}`
-          );
-        }
-        if (carouselItem.ad) {
-          console.log(`Ad ID in Carousel: ${carouselItem.ad.ad_id}`);
-        }
-      }
-    }
+    // } else if (mediaDetails.media_type === 8) {
+    //   for (const carouselItem of mediaDetails.carousel_media) {
+    //     if (carouselItem.media_type === 1) {
+    //       console.log(
+    //         `Carousel Photo URL: ${carouselItem.image_versions2.candidates[0].url}`
+    //       );
+    //     } else if (carouselItem.media_type === 2) {
+    //       console.log(
+    //         `Carousel Video URL: ${carouselItem.video_versions[0].url}`
+    //       );
+    //     }
+    //     if (carouselItem.ad) {
+    //       console.log(`Ad ID in Carousel: ${carouselItem.ad.ad_id}`);
+    //     }
+    //   }
+    // }
 
-    if (mediaDetails.ad) {
-      console.log(`Ad ID: ${mediaDetails.ad.ad_id}`);
-    }
+    // if (mediaDetails.ad) {
+    //   console.log(`Ad ID: ${mediaDetails.ad.ad_id}`);
+    // }
   }
 
   // let reply = "";

@@ -42,6 +42,7 @@ const getToken = async () => {
 };
 
 // get ads
+const processedMessageIds = new Set();
 const getNewMessages = async () => {
   const ig = new IgApiClient();
   ig.state.generateDevice("heystak.io");
@@ -54,7 +55,6 @@ const getNewMessages = async () => {
   const threads = await inboxFeed.items();
 
   // A set to keep track of processed message IDs
-  const processedMessageIds = new Set();
 
   // Load processed message IDs from storage (this is just an example)
   // In a real application, you would load this from a database or file
@@ -64,22 +64,7 @@ const getNewMessages = async () => {
     const messages = thread.items;
     for (const message of messages) {
       if (!processedMessageIds.has(message.item_id)) {
-        console.log(message?.item_type);
-
-        // Mark this message as processed
         processedMessageIds.add(message.item_id);
-
-        // Do something with the message
-        // e.g., save the message ID to storage to persist processed state
-
-        // console.log(message.item_type, message.media_share , "neetx");
-
-        // thread.thread_id,
-        // message.item_id,
-        // message.text || "",
-        // message.user_id,
-        // message.item_type,
-        // message.media_share
       }
     }
   }

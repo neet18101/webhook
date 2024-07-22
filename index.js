@@ -66,7 +66,7 @@ const getNewMessages = async () => {
         // Process the new message
         console.log("New message:", message.item_type);
         if (message.item_type === "media_share") {
-          console.log(message.media_share);
+          console.log(JSON.stringify(message.media_share.image_versions2));
         }
         // console.log(message.item_type === "media_share");
         console.log(processedMessageIds);

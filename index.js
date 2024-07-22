@@ -44,6 +44,7 @@ const getToken = async () => {
 // get ads
 const processedMessageIds = new Set();
 let botUserId;
+const ig = new IgApiClient();
 
 const handleIncomingMessage = async (
   threadId,

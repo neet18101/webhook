@@ -66,13 +66,26 @@ const getNewMessages = async () => {
         // Process the new message
         console.log("New message:", message.item_type);
         if (message.item_type === "media_share") {
-          // const post_id = message?.media_share?.id;
-          // const brand_logo = message?.media_share?.user?.profile_pic_url;
-          // const brand_username = message?.media_share?.user?.username;
-          // const brand_fullname = message?.media_share?.user?.full_name;
-          // const caption_text = message?.media_share?.caption?.text;
-          // const ad_id = message?.media_share?.ad_id;
-          // const product_images = carousel_media.map(item => item.image_versions2.candidates[0].url);
+          const post_id = message?.media_share?.id;
+          const brand_logo = message?.media_share?.user?.profile_pic_url;
+          const brand_username = message?.media_share?.user?.username;
+          const brand_fullname = message?.media_share?.user?.full_name;
+          const caption_text = message?.media_share?.caption?.text;
+          const ad_id = message?.media_share?.ad_id;
+          const product_images = carousel_media.map(
+            (item) => item.image_versions2.candidates[0].url
+          );
+          const product_link = carousel_media[0].link;
+          console.log(
+            post_id,
+            brand_logo,
+            brand_username,
+            brand_fullname,
+            caption_text,
+            ad_id,
+            product_images,
+            product_link
+          );
           console.log(JSON.stringify(message?.media_share));
         }
 

@@ -62,14 +62,6 @@ const handleIncomingMessage = async (
   processedMessageIds.add(messageId);
   console.log(processedMessageIds, "insideMessage", userId);
 
-  // const userInfo = await ig.user.info(userId);
-  // const userHandle = userInfo.username;
-
-  // console.log(
-  //   `Processing new message from user ${userHandle} (ID: ${userId}): ${text}`
-  // );
-  // console.log(`Message type: ${itemType}`);
-
   if (itemType === "media_share" && mediaDetails) {
     console.log(`Media type: ${mediaDetails.media_type}`);
     if (mediaDetails.media_type === 1) {
@@ -77,47 +69,9 @@ const handleIncomingMessage = async (
         `Image URL: ${mediaDetails.image_versions2.candidates[0].url}`
       );
     }
-
-    // else if (mediaDetails.media_type === 8) {
-    //   for (const carouselItem of mediaDetails.carousel_media) {
-    //     if (carouselItem.media_type === 1) {
-    //       console.log(
-    //         `Carousel Photo URL: ${carouselItem.image_versions2.candidates[0].url}`
-    //       );
-    //     } else if (carouselItem.media_type === 2) {
-    //       console.log(
-    //         `Carousel Video URL: ${carouselItem.video_versions[0].url}`
-    //       );
-    //     }
-    //     if (carouselItem.ad) {
-    //       console.log(`Ad ID in Carousel: ${carouselItem.ad.ad_id}`);
-    //     }
-    //   }
-    // }
   }
-
-  // let reply = "";
-  // if (itemType === "text") {
-  //   if (text.toLowerCase() === "hello") {
-  //     reply = "Hello! 😊 How are you?";
-  //   } else if (/^\d{6}$/.test(text)) {
-  //     reply = `🔑 Your OTP is: ${text}`;
-  //   } else {
-  //     reply = "I'm sorry, I didn't understand that. 🤖";
-  //   }
-  // } else if (itemType === "media_share") {
-  //   reply = "Thanks for sharing the media! 😊";
-  // } else {
-  //   reply = "I'm sorry, I can only process text messages right now. 🤖";
-  // }
-
-  // if (reply) {
-  //   await ig.entity.directThread(threadId).broadcastText(reply);
-  //   console.log(`Replied to user ${userHandle} with: ${reply}`);
-  // }
 };
 const getNewMessages = async () => {
-  const ig = new IgApiClient();
   ig.state.generateDevice("heystak.io");
   console.log("IG_USERNAME:", "heystak.io");
   console.log("IG_PASSWORD:", "Heystak12!" ? "Loaded" : "Not Loaded");
@@ -128,14 +82,8 @@ const getNewMessages = async () => {
   const inboxFeed = ig.feed.directInbox();
   const threads = await inboxFeed.items();
 
-  // A set to keep track of processed message IDs
-
-  // Load processed message IDs from storage (this is just an example)
-  // In a real application, you would load this from a database or file
-  // const processedMessageIds = new Set(loadProcessedMessageIdsFromStorage());
-
   for (const thread of threads) {
-    const messages = thread.items;
+    const messages = thread.items.reverse(); // Process oldest to newest
     for (const message of messages) {
       if (
         !processedMessageIds.has(message.item_id) &&

@@ -3,9 +3,6 @@ const axios = require("axios");
 const app = express();
 app.use(express.json());
 const { IgApiClient } = require("instagram-private-api");
-const ig = new IgApiClient();
-const processedMessages = new Set(); // Set to store processed message IDs
-let botUserId; // Store the bot's user ID
 
 // Initialize Supabase client
 const { createClient } = require("@supabase/supabase-js");
@@ -45,112 +42,37 @@ const getToken = async () => {
 };
 
 // get ads
-
-const handleIncomingMessage = async (
-  threadId,
-  messageId,
-  text,
-  userId,
-  itemType,
-  mediaDetails
-) => {
-  if (processedMessages.has(messageId)) {
-    return;
-  }
-
-  processedMessages.add(messageId);
-
-  const userInfo = await ig.user.info(userId);
-  const userHandle = userInfo.username;
-
-  console.log(
-    `Processing new message from user ${userHandle} (ID: ${userId}): ${text}`
-  );
-  console.log(`Message type: ${itemType}`);
-
-  if (itemType === "media_share" && mediaDetails) {
-    console.log(`Media type: ${mediaDetails.media_type}`);
-    if (mediaDetails.media_type === 1) {
-      console.log(
-        `Image URL: ${mediaDetails.image_versions2.candidates[0].url}`
-      );
-    } else if (mediaDetails.media_type === 2) {
-      console.log(`Video URL: ${mediaDetails.video_versions[0].url}`);
-    } else if (mediaDetails.media_type === 8) {
-      for (const carouselItem of mediaDetails.carousel_media) {
-        if (carouselItem.media_type === 1) {
-          console.log(
-            `Carousel Photo URL: ${carouselItem.image_versions2.candidates[0].url}`
-          );
-        } else if (carouselItem.media_type === 2) {
-          console.log(
-            `Carousel Video URL: ${carouselItem.video_versions[0].url}`
-          );
-        }
-        if (carouselItem.ad) {
-          console.log(`Ad ID in Carousel: ${carouselItem.ad.ad_id}`);
-        }
-      }
-    }
-
-    if (mediaDetails.ad) {
-      console.log(`Ad ID: ${mediaDetails.ad.ad_id}`);
-    }
-  }
-
-  // let reply = "";
-  // if (itemType === "text") {
-  //   if (text.toLowerCase() === "hello") {
-  //     reply = "Hello! 😊 How are you?";
-  //   } else if (/^\d{6}$/.test(text)) {
-  //     reply = `🔑 Your OTP is: ${text}`;
-  //   } else {
-  //     reply = "I'm sorry, I didn't understand that. 🤖";
-  //   }
-  // } else if (itemType === "media_share") {
-  //   reply = "Thanks for sharing the media! 😊";
-  // } else {
-  //   reply = "I'm sorry, I can only process text messages right now. 🤖";
-  // }
-
-  // if (reply) {
-  //   await ig.entity.directThread(threadId).broadcastText(reply);
-  //   console.log(`Replied to user ${userHandle} with: ${reply}`);
-  // }
-};
 const getNewMessages = async () => {
   const ig = new IgApiClient();
   ig.state.generateDevice("heystak.io");
   console.log("IG_USERNAME:", "heystak.io");
   console.log("IG_PASSWORD:", "Heystak12!" ? "Loaded" : "Not Loaded");
 
-  const loginUser = await ig.account.login("heystak.io", "Heystak12!");
-
-  const botUserId = loginUser.pk;
+  await ig.account.login("heystak.io", "Heystak12!");
 
   const inboxFeed = ig.feed.directInbox();
   const threads = await inboxFeed.items();
-  for (const thread of threads) {
-    const messages = thread.items;
-    for (const message of messages) {
-      if (
-        !processedMessages.has(message.item_id) &&
-        message.user_id !== botUserId
-      ) {
-        await handleIncomingMessage(
-          thread.thread_id,
-          message.item_id,
-          message.text || "",
-          message.user_id,
-          message.item_type,
-          message.media_share
-        );
-      }
-    }
-  }
 
   // A set to keep track of processed message IDs
   const processedMessageIds = new Set();
+
+  // Load processed message IDs from storage (this is just an example)
+  // In a real application, you would load this from a database or file
+  // const processedMessageIds = new Set(loadProcessedMessageIdsFromStorage());
+
+  for (const thread of threads) {
+    const messages = thread.items;
+    for (const message of messages) {
+      console.log(message.item_type, message.media_share , "neetx");
+
+      // thread.thread_id,
+      // message.item_id,
+      // message.text || "",
+      // message.user_id,
+      // message.item_type,
+      // message.media_share
+    }
+  }
 };
 async function callAnotherApi(userData) {
   try {

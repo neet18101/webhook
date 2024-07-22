@@ -49,8 +49,6 @@ ig.account.login("luciferlord999", "yadav@123#");
 
 // get ads
 const getNewMessages = async () => {
-
-
   const inboxFeed = ig.feed.directInbox();
   const threads = await inboxFeed.items();
 
@@ -237,23 +235,53 @@ app.post("/webhook/outgoing", async (req, res) => {
   return res.sendStatus(200); // Corrected to use sendStatus
 });
 
-app.get("/messaging-webhook", (req, res) => {
-  const VERIFY_TOKEN = "navneet123"; // Replace with your verify token
+const VERIFY_TOKEN = "navneet123";
+app.post("/webhook", (req, res) => {
+  const body = req.body;
 
+  // Check if this is a page subscription
+  if (body.object === "instagram") {
+    // Iterate over each entry
+    body.entry.forEach((entry) => {
+      const messagingEvents = entry.messaging;
+      messagingEvents.forEach((event) => {
+        // Check if the event is a message
+        if (event.message) {
+          const senderId = event.sender.id; // ID of the sender
+          const messageText = event.message.text; // The message text
+
+          console.log("Message from user:", senderId, messageText);
+
+          // Optionally, you can send a reply back
+          sendMessage(senderId, `Received your message: ${messageText}`);
+        }
+      });
+    });
+
+    // Respond with 200 OK to Facebook
+    res.sendStatus(200);
+  } else {
+    // Respond with 404 if not a page subscription
+    res.sendStatus(404);
+  }
+});
+
+// Webhook verification endpoint
+app.get("/webhook", (req, res) => {
   const mode = req.query["hub.mode"];
   const token = req.query["hub.verify_token"];
   const challenge = req.query["hub.challenge"];
 
+  // Check if the token matches
   if (mode && token) {
     if (mode === "subscribe" && token === VERIFY_TOKEN) {
       console.log("WEBHOOK_VERIFIED");
-      console.log(challenge);
-      res.status(200).send(challenge);
+      res.status(200).send(challenge); // Respond with the challenge
     } else {
-      res.sendStatus(403);
+      res.sendStatus(403); // Forbidden
     }
   } else {
-    res.sendStatus(400);
+    res.sendStatus(400); // Bad request
   }
 });
 

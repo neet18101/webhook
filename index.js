@@ -67,6 +67,7 @@ const getNewMessages = async () => {
         console.log("New message:", message.media_share);
 
         // Add the message ID to the set of processed IDs
+        console.log(message?.media_share,"neets");
         processedMessageIds.add(message.item_id);
 
         // Save the processed message ID to storage (this is just an example)

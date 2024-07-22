@@ -3,6 +3,8 @@ const axios = require("axios");
 const app = express();
 app.use(express.json());
 const { IgApiClient } = require("instagram-private-api");
+const ig = new IgApiClient();
+const processedMessages = new Set(); // Set to store processed message IDs
 
 // Initialize Supabase client
 const { createClient } = require("@supabase/supabase-js");

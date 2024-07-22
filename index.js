@@ -124,9 +124,9 @@ const getNewMessages = async () => {
   console.log("IG_USERNAME:", "heystak.io");
   console.log("IG_PASSWORD:", "Heystak12!" ? "Loaded" : "Not Loaded");
 
-  await ig.account.login("heystak.io", "Heystak12!");
+  const loginUser = await ig.account.login("heystak.io", "Heystak12!");
 
-  const botUserId = ig.account.getId();
+  const botUserId = loginUser.pk;
 
   const inboxFeed = ig.feed.directInbox();
   const threads = await inboxFeed.items();

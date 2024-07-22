@@ -42,6 +42,84 @@ const getToken = async () => {
 };
 
 // get ads
+const processedMessages = new Set();
+const handleIncomingMessage = async (
+  threadId,
+  messageId,
+  text,
+  userId,
+  itemType,
+  mediaDetails
+) => {
+  if (processedMessages.has(messageId)) {
+    return;
+  }
+
+  processedMessages.add(messageId);
+
+  const userInfo = await ig.user.info(userId);
+  const userHandle = userInfo.username;
+
+  console.log(
+    `Processing new message from user ${userHandle} (ID: ${userId}): ${text}`
+  );
+  console.log(`Message type: ${itemType}`);
+
+  if (itemType === "media_share" && mediaDetails) {
+    console.log(`Media type: ${mediaDetails.media_type}`);
+    if (mediaDetails.media_type === 1) {
+      console.log(
+        `Image URL: ${mediaDetails.image_versions2.candidates[0].url}`
+      );
+    } else if (mediaDetails.media_type === 2) {
+      console.log(`Video URL: ${mediaDetails.video_versions[0].url}`);
+    } else if (mediaDetails.media_type === 8) {
+      for (const carouselItem of mediaDetails.carousel_media) {
+        if (carouselItem.media_type === 1) {
+          console.log(
+            `Carousel Photo URL: ${carouselItem.image_versions2.candidates[0].url}`
+          );
+        } else if (carouselItem.media_type === 2) {
+          console.log(
+            `Carousel Video URL: ${carouselItem.video_versions[0].url}`
+          );
+        }
+        if (carouselItem.ad) {
+          console.log(`Ad ID in Carousel: ${carouselItem.ad.ad_id}`);
+        }
+      }
+    }
+
+    if (mediaDetails.ad) {
+      console.log(`Ad ID: ${mediaDetails.ad.ad_id}`);
+    }
+  }
+};
+
+const processMessages = async () => {
+  const inboxFeed = ig.feed.directInbox();
+  const threads = await inboxFeed.items();
+
+  for (const thread of threads) {
+    const messages = thread.items;
+    for (const message of messages) {
+      if (
+        !processedMessages.has(message.item_id) &&
+        message.user_id !== botUserId
+      ) {
+        await handleIncomingMessage(
+          thread.thread_id,
+          message.item_id,
+          message.text || "",
+          message.user_id,
+          message.item_type,
+          message.media_share
+        );
+      }
+    }
+  }
+};
+
 const getNewMessages = async () => {
   const ig = new IgApiClient();
   ig.state.generateDevice("heystak.io");
@@ -49,36 +127,9 @@ const getNewMessages = async () => {
   console.log("IG_PASSWORD:", "Heystak12!" ? "Loaded" : "Not Loaded");
 
   await ig.account.login("heystak.io", "Heystak12!");
-
-  const inboxFeed = ig.feed.directInbox();
-  const threads = await inboxFeed.items();
-
-  // A set to keep track of processed message IDs
-  const processedMessageIds = new Set();
-
-  // Load processed message IDs from storage (this is just an example)
-  // In a real application, you would load this from a database or file
-  // const processedMessageIds = new Set(loadProcessedMessageIdsFromStorage());
-
-  threads.forEach((thread) => {
-    thread.items.forEach((message) => {
-      if (message.media_type === 8) {
-        console.log("Carousel media found");
-        // Handle carousel media
-        message.carousel_media.forEach((carouselItem) => {
-          if (
-            carouselItem.image_versions2 &&
-            carouselItem.image_versions2.candidates
-          ) {
-            // Extract image URLs from carousel items
-            const imageUrl = carouselItem.image_versions2.candidates[0].url;
-            console.log("Carousel item image URL:", imageUrl);
-          }
-        });
-      }
-    });
-  });
+  await processMessages();
 };
+
 async function callAnotherApi(userData) {
   try {
     if (!isNaN(userData.lastMessage)) {

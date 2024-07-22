@@ -66,10 +66,16 @@ const getNewMessages = async () => {
         // Process the new message
         console.log("New message:", message.item_type);
         if (message.item_type === "media_share") {
-          console.log(JSON.stringify(message?.media_share?.id));
+          // const post_id = message?.media_share?.id;
+          // const brand_logo = message?.media_share?.user?.profile_pic_url;
+          // const brand_username = message?.media_share?.user?.username;
+          // const brand_fullname = message?.media_share?.user?.full_name;
+          // const caption_text = message?.media_share?.caption?.text;
+          // const ad_id = message?.media_share?.ad_id;
+          // const product_images = carousel_media.map(item => item.image_versions2.candidates[0].url);
+          console.log(JSON.stringify(message?.media_share));
         }
-        // console.log(message.item_type === "media_share");
-        console.log(processedMessageIds);
+
         // Add the message ID to the set of processed IDs
         processedMessageIds.add(message.fbid);
 

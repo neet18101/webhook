@@ -235,6 +235,27 @@ app.post("/webhook/outgoing", async (req, res) => {
   return res.sendStatus(200); // Corrected to use sendStatus
 });
 
+// Add support for GET requests to our webhook
+app.get("/messaging-webhook", (req, res) => {
+  const VERIFY_TOKEN = "navneet123"; // Replace with your verify token
+
+  const mode = req.query["hub.mode"];
+  const token = req.query["hub.verify_token"];
+  const challenge = req.query["hub.challenge"];
+  console.log(req.body);
+
+  if (mode && token) {
+    if (mode === "subscribe" && token === VERIFY_TOKEN) {
+      console.log("WEBHOOK_VERIFIED");
+      res.status(200).send(challenge);
+    } else {
+      res.sendStatus(403);
+    }
+  } else {
+    res.sendStatus(400);
+  }
+});
+
 const PORT = process.env.PORT || 8090;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

@@ -63,16 +63,24 @@ const getNewMessages = async () => {
   for (const thread of threads) {
     const messages = thread.items;
     for (const message of messages) {
-      console.log(message?.item_type);
+      if (!processedMessageIds.has(message.item_id)) {
+        console.log(message?.item_type);
 
-      // console.log(message.item_type, message.media_share , "neetx");
+        // Mark this message as processed
+        processedMessageIds.add(message.item_id);
 
-      // thread.thread_id,
-      // message.item_id,
-      // message.text || "",
-      // message.user_id,
-      // message.item_type,
-      // message.media_share
+        // Do something with the message
+        // e.g., save the message ID to storage to persist processed state
+
+        // console.log(message.item_type, message.media_share , "neetx");
+
+        // thread.thread_id,
+        // message.item_id,
+        // message.text || "",
+        // message.user_id,
+        // message.item_type,
+        // message.media_share
+      }
     }
   }
 };

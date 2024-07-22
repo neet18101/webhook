@@ -45,6 +45,7 @@ const getToken = async () => {
 // get ads
 const processedMessageIds = new Set();
 let botUserId;
+let lastProcessedTimestamp = 0;
 // const ig = new IgApiClient();
 console.log(processedMessageIds, "hello");
 
@@ -69,6 +70,8 @@ const handleIncomingMessage = async (
       console.log(
         `Image URL: ${mediaDetails.image_versions2.candidates[0].url}`
       );
+    } else {
+      console.log(mediaDetails?.media_type);
     }
   }
 };

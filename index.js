@@ -65,6 +65,9 @@ const getNewMessages = async () => {
       if (!processedMessageIds.has(message.item_id)) {
         // Process the new message
         console.log("New message:", message.item_type);
+        if (message.item_type === "media_share") {
+          console.log(message.media_share);
+        }
         // console.log(message.item_type === "media_share");
         console.log(processedMessageIds);
         // Add the message ID to the set of processed IDs

@@ -74,7 +74,9 @@ const handleIncomingMessage = async (
       console.log(
         `Image URL: ${mediaDetails.image_versions2.candidates[0].url}`
       );
-    // } else if (mediaDetails.media_type === 8) {
+    } 
+    
+    // else if (mediaDetails.media_type === 8) {
     //   for (const carouselItem of mediaDetails.carousel_media) {
     //     if (carouselItem.media_type === 1) {
     //       console.log(
@@ -91,9 +93,7 @@ const handleIncomingMessage = async (
     //   }
     // }
 
-    // if (mediaDetails.ad) {
-    //   console.log(`Ad ID: ${mediaDetails.ad.ad_id}`);
-    // }
+    
   }
 
   // let reply = "";

@@ -62,7 +62,7 @@ const getNewMessages = async () => {
 
   threads.forEach((thread) => {
     thread.items.forEach((message) => {
-      console.log(message.media_type);
+      console.log(message);
       // if (!processedMessageIds.has(message.item_id)) {
       //   // Process the new message
       //   console.log("New message:", message.media_type);

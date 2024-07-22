@@ -45,7 +45,7 @@ const getToken = async () => {
 const processedMessageIds = new Set();
 let botUserId;
 // const ig = new IgApiClient();
-console.log(processedMessageIds,"hello")
+console.log(processedMessageIds, "hello");
 
 const handleIncomingMessage = async (
   threadId,
@@ -60,7 +60,7 @@ const handleIncomingMessage = async (
   }
 
   processedMessageIds.add(messageId);
-  console.log(processedMessageIds,"insideMessage")
+  console.log(processedMessageIds, "insideMessage", userId);
 
   // const userInfo = await ig.user.info(userId);
   // const userHandle = userInfo.username;

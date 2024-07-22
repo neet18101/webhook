@@ -60,6 +60,7 @@ const handleIncomingMessage = async (
   }
 
   processedMessageIds.add(messageId);
+  console.log(processedMessageIds,"insideMessage")
 
   // const userInfo = await ig.user.info(userId);
   // const userHandle = userInfo.username;

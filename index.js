@@ -45,6 +45,7 @@ const getToken = async () => {
 const processedMessageIds = new Set();
 let botUserId;
 // const ig = new IgApiClient();
+console.log(processedMessageIds,"hello")
 
 const handleIncomingMessage = async (
   threadId,
@@ -74,8 +75,8 @@ const handleIncomingMessage = async (
       console.log(
         `Image URL: ${mediaDetails.image_versions2.candidates[0].url}`
       );
-    } 
-    
+    }
+
     // else if (mediaDetails.media_type === 8) {
     //   for (const carouselItem of mediaDetails.carousel_media) {
     //     if (carouselItem.media_type === 1) {
@@ -92,8 +93,6 @@ const handleIncomingMessage = async (
     //     }
     //   }
     // }
-
-    
   }
 
   // let reply = "";
@@ -265,7 +264,8 @@ app.post("/webhook/incoming", async (req, res) => {
         obj.contact_id === userData.contact_id &&
         obj.lastMessage === userData.lastMessage
     );
-    // console.log(check, "neet", userData, inComingDetails);
+
+    // console.log(check, "neet", = userData, inComingDetails);
     if (check) {
       return res.sendStatus(200);
     } else {

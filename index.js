@@ -65,9 +65,9 @@ const getNewMessages = async () => {
     for (const message of messages) {
       if (
         message.item_type == "media_share" &&
-        message.media_share?.media_type === 1
+        message?.media_type === 1
       ) {
-        console.log("image url ", message?.image_versions2?.candidates[0]?.url);
+        console.log("image url ", message?.image_versions2);
       } else {
         console.log(JSON.stringify(message?.image_versions2));
         console.log("nothing found");

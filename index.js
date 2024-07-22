@@ -42,14 +42,13 @@ const getToken = async () => {
 };
 
 // get ads
+const ig = new IgApiClient();
+ig.state.generateDevice("heystak.io");
+console.log("IG_USERNAME:", "heystak.io");
+console.log("IG_PASSWORD:", "Heystak12!" ? "Loaded" : "Not Loaded");
+
+await ig.account.login("heystak.io", "Heystak12!");
 const getNewMessages = async () => {
-  const ig = new IgApiClient();
-  ig.state.generateDevice("heystak.io");
-  console.log("IG_USERNAME:", "heystak.io");
-  console.log("IG_PASSWORD:", "Heystak12!" ? "Loaded" : "Not Loaded");
-
-  await ig.account.login("heystak.io", "Heystak12!");
-
   const inboxFeed = ig.feed.directInbox();
   const threads = await inboxFeed.items();
 

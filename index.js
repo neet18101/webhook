@@ -62,7 +62,20 @@ const getNewMessages = async () => {
 
   threads.forEach((thread) => {
     thread.items.forEach((message) => {
-      console.log(message?.media_share, "neets");
+      if (message.media_type === 8) {
+        console.log("Carousel media found");
+        // Handle carousel media
+        message.carousel_media.forEach((carouselItem) => {
+          if (
+            carouselItem.image_versions2 &&
+            carouselItem.image_versions2.candidates
+          ) {
+            // Extract image URLs from carousel items
+            const imageUrl = carouselItem.image_versions2.candidates[0].url;
+            console.log("Carousel item image URL:", imageUrl);
+          }
+        });
+      }
     });
   });
 };

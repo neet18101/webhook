@@ -42,13 +42,14 @@ const getToken = async () => {
 };
 
 // get ads
-const ig = new IgApiClient();
-ig.state.generateDevice("heystak.io");
-console.log("IG_USERNAME:", "heystak.io");
-console.log("IG_PASSWORD:", "Heystak12!" ? "Loaded" : "Not Loaded");
-
-ig.account.login("heystak.io", "Heystak12!");
 const getNewMessages = async () => {
+  const ig = new IgApiClient();
+  ig.state.generateDevice("heystak.io");
+  console.log("IG_USERNAME:", "heystak.io");
+  console.log("IG_PASSWORD:", "Heystak12!" ? "Loaded" : "Not Loaded");
+
+  await ig.account.login("heystak.io", "Heystak12!");
+
   const inboxFeed = ig.feed.directInbox();
   const threads = await inboxFeed.items();
 
@@ -235,7 +236,6 @@ app.post("/webhook/outgoing", async (req, res) => {
   return res.sendStatus(200); // Corrected to use sendStatus
 });
 
-// Add support for GET requests to our webhook
 app.get("/messaging-webhook", (req, res) => {
   const VERIFY_TOKEN = "navneet123"; // Replace with your verify token
 
@@ -246,7 +246,7 @@ app.get("/messaging-webhook", (req, res) => {
   if (mode && token) {
     if (mode === "subscribe" && token === VERIFY_TOKEN) {
       console.log("WEBHOOK_VERIFIED");
-      console.log(req.body);
+      console.log(challenge);
       res.status(200).send(challenge);
     } else {
       res.sendStatus(403);

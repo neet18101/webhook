@@ -2,7 +2,7 @@ const express = require("express");
 const axios = require("axios");
 const app = express();
 app.use(express.json());
-var sendpulse = require("sendpulse-api");
+const { IgApiClient } = require("instagram-private-api");
 
 // Initialize Supabase client
 const { createClient } = require("@supabase/supabase-js");
@@ -41,13 +41,67 @@ const getToken = async () => {
   }
 };
 
-async function callAnotherApi(userData) {
-  console.log("Starting callAnotherApi with userData:", userData);
+// get ads
+const getNewMessages = async () => {
+  const ig = new IgApiClient();
+  ig.state.generateDevice("heystak.io");
+  console.log("IG_USERNAME:", "heystak.io");
+  console.log("IG_PASSWORD:", "Heystak12!" ? "Loaded" : "Not Loaded");
 
+  await ig.account.login("heystak.io", "Heystak12!");
+
+  const inboxFeed = ig.feed.directInbox();
+  const threads = await inboxFeed.items();
+
+  // A set to keep track of processed message IDs
+  const processedMessageIds = new Set();
+
+  // Load processed message IDs from storage (this is just an example)
+  // In a real application, you would load this from a database or file
+  // const processedMessageIds = new Set(loadProcessedMessageIdsFromStorage());
+
+  threads.forEach((thread) => {
+    thread.items.forEach((message) => {
+      if (!processedMessageIds.has(message.fbid)) {
+        // Process the new message
+        console.log("New message:", message.item_type);
+        if (message.item_type === "media_share") {
+          const post_id = message?.media_share?.id;
+          const brand_logo = message?.media_share?.user?.profile_pic_url;
+          const brand_username = message?.media_share?.user?.username;
+          const brand_fullname = message?.media_share?.user?.full_name;
+          const caption_text = message?.media_share?.caption?.text;
+          const ad_id = message?.media_share?.ad_id;
+          const product_images = carousel_media.map(
+            (item) => item.image_versions2.candidates[0].url
+          );
+          const product_link = carousel_media[0].link;
+          console.log(
+            post_id,
+            brand_logo,
+            brand_username,
+            brand_fullname,
+            caption_text,
+            ad_id,
+            product_images,
+            product_link
+          );
+          console.log(JSON.stringify(message?.media_share));
+        }
+
+        // Add the message ID to the set of processed IDs
+        processedMessageIds.add(message.fbid);
+
+        // Save the processed message ID to storage (this is just an example)
+        // In a real application, you would save this to a database or file
+        // saveProcessedMessageIdToStorage(message.item_id);
+      }
+    });
+  });
+};
+async function callAnotherApi(userData) {
   try {
     if (!isNaN(userData.lastMessage)) {
-      console.log("lastMessage is a number, proceeding with Supabase query.");
-
       const { data: user, error } = await supabase
         .from("channels")
         .select("*")
@@ -55,11 +109,9 @@ async function callAnotherApi(userData) {
         .eq("otp", userData?.lastMessage);
 
       if (error) {
-        console.error("Error fetching user from Supabase:", error.message);
+        console.error("Error fetching user:", error.message);
         return error.message;
       }
-
-      console.log("Supabase query result:", user);
 
       if (!user || user.length === 0) {
         const postData = {
@@ -68,39 +120,71 @@ async function callAnotherApi(userData) {
             {
               type: "text",
               message: {
-                text: "Account not verified. Please make sure that the verification code and Instagram account are connected.",
+                text: "Account not verified. please make sure that the verification code and Instagram account are connected",
               },
             },
           ],
-          sent_by: "my_system" // Custom field to indicate the source
         };
 
-        console.log("postData to be sent to SendPulse:", postData);
-
-        const sendPulseAccessToken = await getToken();
         const sendResponse = await axios.post(
           "https://api.sendpulse.com/instagram/contacts/send",
           postData,
           {
             headers: {
-              Authorization: `Bearer ${sendPulseAccessToken}`,
+              Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjgzNmQzNDQxMWJhYmZjNTM5MDc1ODhhODExYTAwMzFkMDQwNWJmOWRiZWY3NDJlZTY2MWE5NWZkMDVmOWNjODlhZTA0YWYzNzM2ZmEzZjFkIn0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6IjgzNmQzNDQxMWJhYmZjNTM5MDc1ODhhODExYTAwMzFkMDQwNWJmOWRiZWY3NDJlZTY2MWE5NWZkMDVmOWNjODlhZTA0YWYzNzM2ZmEzZjFkIiwiaWF0IjoxNzIxMzkwOTI3LCJuYmYiOjE3MjEzOTA5MjcsImV4cCI6MTcyMTM5NDUyNywic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.XIdZyo8mGBdrYBwyds1f2vJKuvI5wAwBqrcmIlZqmyT6bsWqbzn1UoyVcZ6lrLEiEuaTUzclAXNsy-cefmkyUSR6s1PZ_uTaqTf-0U0y3Z6j015DYnEG5vliwbIL2jh139stVQ8UmtLUacL_KZpJeRx0QbFwz6qKK5R01RCEnQ2f805J2EvnVgw3lqrJfPrcpw7O3IZ6GjGwKbLRA-IZtSM0rN4_aKPcPVTJXylUKpBJvnUbklRnR_67aKMdUjWO7p7uxppRx1I7kRzwmdL7tsCYcpfjQ7PpYXTKBD_bHYn_ycKAnjlazp5nZauvMRBIXI7sP_FApYZRVKKLLwbhAw`,
               "Content-Type": "application/json",
             },
-            timeout: 10000 // 10 seconds timeout
           }
         );
 
         console.log("Response from SendPulse API:", sendResponse.data);
         return true;
-      }
+      } else {
+        const { data: user, error } = await supabase
+          .from("channels")
+          .select("id, is_verified")
+          .eq("channel_name", userData?.username);
 
-      return false;
+        if (user[0].is_verified) {
+          return true;
+        } else {
+          console.log(user[0]?.id);
+          const { data: updateUser, error } = await supabase
+            .from("channels")
+            .update({ is_verified: true })
+            .eq("id", user[0].id);
+          console.log(updateUser, error, "neetx");
+          const postData = {
+            contact_id: userData.contact_id,
+            messages: [
+              {
+                type: "text",
+                message: {
+                  text: "Otp Verified Successful 🎉🎉",
+                },
+              },
+            ],
+          };
+          const sendResponse = await axios.post(
+            "https://api.sendpulse.com/instagram/contacts/send",
+            postData,
+            {
+              headers: {
+                Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjgzNmQzNDQxMWJhYmZjNTM5MDc1ODhhODExYTAwMzFkMDQwNWJmOWRiZWY3NDJlZTY2MWE5NWZkMDVmOWNjODlhZTA0YWYzNzM2ZmEzZjFkIn0.eyJhdWQiOiI4NDUyN2E0NjkxMjY4Y2U3YzlhMmFlOGFhZmQxNTljNiIsImp0aSI6IjgzNmQzNDQxMWJhYmZjNTM5MDc1ODhhODExYTAwMzFkMDQwNWJmOWRiZWY3NDJlZTY2MWE5NWZkMDVmOWNjODlhZTA0YWYzNzM2ZmEzZjFkIiwiaWF0IjoxNzIxMzkwOTI3LCJuYmYiOjE3MjEzOTA5MjcsImV4cCI6MTcyMTM5NDUyNywic3ViIjoiIiwic2NvcGVzIjpbXSwidXNlciI6eyJpZCI6ODc3NTcxOCwiZ3JvdXBfaWQiOm51bGwsInBhcmVudF9pZCI6bnVsbCwiY29udGV4dCI6eyJhY2NsaW0iOiIwIn0sImFyZWEiOiJyZXN0IiwiYXBwX2lkIjpudWxsfX0.XIdZyo8mGBdrYBwyds1f2vJKuvI5wAwBqrcmIlZqmyT6bsWqbzn1UoyVcZ6lrLEiEuaTUzclAXNsy-cefmkyUSR6s1PZ_uTaqTf-0U0y3Z6j015DYnEG5vliwbIL2jh139stVQ8UmtLUacL_KZpJeRx0QbFwz6qKK5R01RCEnQ2f805J2EvnVgw3lqrJfPrcpw7O3IZ6GjGwKbLRA-IZtSM0rN4_aKPcPVTJXylUKpBJvnUbklRnR_67aKMdUjWO7p7uxppRx1I7kRzwmdL7tsCYcpfjQ7PpYXTKBD_bHYn_ycKAnjlazp5nZauvMRBIXI7sP_FApYZRVKKLLwbhAw`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+        }
+
+        return true;
+      }
     } else {
-      console.log("lastMessage is not a number, skipping Supabase query.");
+      console.log(userData, "neet");
       return false;
     }
   } catch (error) {
-    console.error("Error in callAnotherApi:", error);
+    console.error("Error calling another API:", error);
     return error.message;
   }
 }
@@ -110,38 +194,38 @@ function storeData(data) {
   const username = data[0]?.contact.username;
   const lastMessage = data[0]?.contact.last_message;
   const contact_id = data[0]?.contact.id;
-  const sent_by = data[0]?.contact.sent_by;
-
-  return { username, lastMessage, contact_id, sent_by };
+  const date = data[0]?.date;
+  return { username, lastMessage, contact_id, date };
 }
+
+const inComingDetails = [];
 
 // Endpoint to receive incoming messages
 app.post("/webhook/incoming", async (req, res) => {
   try {
     const data = req.body;
+    console.log(data[0]?.info?.message, data);
     const userData = storeData(data);
-    console.log("Received userData:", userData);
-
-    // Ignore requests sent by your own system
-    if (userData.sent_by === "my_system") {
-      console.log("Ignoring request from my_system");
-      return res.send("No action taken");
-    }
-
-    const result = await callAnotherApi(userData);
-    if (result === true) {
-      console.log("Message sent to SendPulse successfully.");
-      return res.send("Message sent");
-    } else if (result === false) {
-      console.log("No action taken.");
-      return res.send("No action taken");
+    const check = await inComingDetails.find(
+      (obj) =>
+        obj.contact_id === userData.contact_id &&
+        obj.lastMessage === userData.lastMessage
+    );
+    // console.log(check, "neet", userData, inComingDetails);
+    if (check) {
+      return res.sendStatus(200);
     } else {
-      console.log("Error occurred:", result);
-      return res.status(500).send(result);
+      inComingDetails.push(userData);
+      await getNewMessages();
+      // await callAnotherApi(userData);
     }
+    // console.log(userData, "neet");
+    // Call another API with the stored data
+
+    return res.sendStatus(200); // Corrected to use sendStatus
   } catch (error) {
-    console.error("Error in webhook incoming:", error);
-    res.status(500).send(error.message);
+    console.log(error);
+    res.status(500).send(error);
   }
 });
 
@@ -150,6 +234,26 @@ app.post("/webhook/outgoing", async (req, res) => {
   const data = req.body;
   console.log(data, "neet");
   return res.sendStatus(200); // Corrected to use sendStatus
+});
+
+app.get("/messaging-webhook", (req, res) => {
+  const VERIFY_TOKEN = "navneet123"; // Replace with your verify token
+
+  const mode = req.query["hub.mode"];
+  const token = req.query["hub.verify_token"];
+  const challenge = req.query["hub.challenge"];
+
+  if (mode && token) {
+    if (mode === "subscribe" && token === VERIFY_TOKEN) {
+      console.log("WEBHOOK_VERIFIED");
+      console.log(challenge);
+      res.status(200).send(challenge);
+    } else {
+      res.sendStatus(403);
+    }
+  } else {
+    res.sendStatus(400);
+  }
 });
 
 const PORT = process.env.PORT || 8090;

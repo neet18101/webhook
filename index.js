@@ -53,11 +53,11 @@ const handleIncomingMessage = async (
   itemType,
   mediaDetails
 ) => {
-  if (processedMessages.has(messageId)) {
+  if (processedMessageIds.has(messageId)) {
     return;
   }
 
-  processedMessages.add(messageId);
+  processedMessageIds.add(messageId);
 
   const userInfo = await ig.user.info(userId);
   const userHandle = userInfo.username;

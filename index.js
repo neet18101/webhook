@@ -86,8 +86,9 @@ const getNewMessages = async () => {
   for (const thread of threads) {
     const messages = thread.items.reverse(); // Process oldest to newest
     for (const message of messages) {
+      const messageTimestamp = message.timestamp / 1000; // Convert to seconds if needed
       if (
-        !processedMessageIds.has(message.item_id) &&
+        messageTimestamp > lastProcessedTimestamp &&
         message.user_id !== botUserId
       ) {
         await handleIncomingMessage(
@@ -98,6 +99,7 @@ const getNewMessages = async () => {
           message.item_type,
           message.media_share
         );
+        lastProcessedTimestamp = messageTimestamp; // Update the last processed timestamp
       }
     }
   }

@@ -62,10 +62,16 @@ const getNewMessages = async () => {
 
   threads.forEach((thread) => {
     thread.items.forEach((message) => {
+      const checkProcessIds = processedMessageIds.find((obj) => {
+        return obj.item_id === message.item_id;
+      });
+      console.log(checkProcessIds);
+      if (checkProcessIds) return;
+
       if (!processedMessageIds.has(message.item_id)) {
         // Process the new message
         console.log("New message:", message.item_type);
-        console.log(message.item_type === "media_share");
+        // console.log(message.item_type === "media_share");
 
         // Add the message ID to the set of processed IDs
         processedMessageIds.add(message.item_id);

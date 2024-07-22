@@ -44,7 +44,7 @@ const getToken = async () => {
 // get ads
 const processedMessageIds = new Set();
 let botUserId;
-const ig = new IgApiClient();
+// const ig = new IgApiClient();
 
 const handleIncomingMessage = async (
   threadId,
@@ -60,13 +60,13 @@ const handleIncomingMessage = async (
 
   processedMessageIds.add(messageId);
 
-  const userInfo = await ig.user.info(userId);
-  const userHandle = userInfo.username;
+  // const userInfo = await ig.user.info(userId);
+  // const userHandle = userInfo.username;
 
-  console.log(
-    `Processing new message from user ${userHandle} (ID: ${userId}): ${text}`
-  );
-  console.log(`Message type: ${itemType}`);
+  // console.log(
+  //   `Processing new message from user ${userHandle} (ID: ${userId}): ${text}`
+  // );
+  // console.log(`Message type: ${itemType}`);
 
   if (itemType === "media_share" && mediaDetails) {
     console.log(`Media type: ${mediaDetails.media_type}`);

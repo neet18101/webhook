@@ -3,7 +3,6 @@ const axios = require("axios");
 const app = express();
 app.use(express.json());
 const { IgApiClient } = require("instagram-private-api");
-const ig = new IgApiClient();
 
 // Initialize Supabase client
 const { createClient } = require("@supabase/supabase-js");
@@ -43,7 +42,7 @@ const getToken = async () => {
 };
 
 // get ads
-const processedMessages = new Set();
+
 const handleIncomingMessage = async (
   threadId,
   messageId,
@@ -95,12 +94,37 @@ const handleIncomingMessage = async (
       console.log(`Ad ID: ${mediaDetails.ad.ad_id}`);
     }
   }
-};
 
-const processMessages = async () => {
+  // let reply = "";
+  // if (itemType === "text") {
+  //   if (text.toLowerCase() === "hello") {
+  //     reply = "Hello! 😊 How are you?";
+  //   } else if (/^\d{6}$/.test(text)) {
+  //     reply = `🔑 Your OTP is: ${text}`;
+  //   } else {
+  //     reply = "I'm sorry, I didn't understand that. 🤖";
+  //   }
+  // } else if (itemType === "media_share") {
+  //   reply = "Thanks for sharing the media! 😊";
+  // } else {
+  //   reply = "I'm sorry, I can only process text messages right now. 🤖";
+  // }
+
+  // if (reply) {
+  //   await ig.entity.directThread(threadId).broadcastText(reply);
+  //   console.log(`Replied to user ${userHandle} with: ${reply}`);
+  // }
+};
+const getNewMessages = async () => {
+  const ig = new IgApiClient();
+  ig.state.generateDevice("heystak.io");
+  console.log("IG_USERNAME:", "heystak.io");
+  console.log("IG_PASSWORD:", "Heystak12!" ? "Loaded" : "Not Loaded");
+
+  await ig.account.login("heystak.io", "Heystak12!");
+
   const inboxFeed = ig.feed.directInbox();
   const threads = await inboxFeed.items();
-
   for (const thread of threads) {
     const messages = thread.items;
     for (const message of messages) {
@@ -119,18 +143,10 @@ const processMessages = async () => {
       }
     }
   }
+
+  // A set to keep track of processed message IDs
+  const processedMessageIds = new Set();
 };
-
-const getNewMessages = async () => {
-  const ig = new IgApiClient();
-  ig.state.generateDevice("heystak.io");
-  console.log("IG_USERNAME:", "heystak.io");
-  console.log("IG_PASSWORD:", "Heystak12!" ? "Loaded" : "Not Loaded");
-
-  await ig.account.login("heystak.io", "Heystak12!");
-  await processMessages();
-};
-
 async function callAnotherApi(userData) {
   try {
     if (!isNaN(userData.lastMessage)) {

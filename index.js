@@ -236,7 +236,7 @@ app.post("/webhook/outgoing", async (req, res) => {
 });
 
 // Add support for GET requests to our webhook
-app.post("/messaging-webhook", (req, res) => {
+app.get("/messaging-webhook", (req, res) => {
   const VERIFY_TOKEN = "navneet123"; // Replace with your verify token
 
   const mode = req.query["hub.mode"];

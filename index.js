@@ -62,7 +62,7 @@ const getNewMessages = async () => {
 
   threads.forEach((thread) => {
     thread.items.forEach((message) => {
-      if (!processedMessageIds.has(message.item_id)) {
+      if (!processedMessageIds.has(message.fbid)) {
         // Process the new message
         console.log("New message:", message.item_type);
         if (message.item_type === "media_share") {
@@ -71,7 +71,7 @@ const getNewMessages = async () => {
         // console.log(message.item_type === "media_share");
         console.log(processedMessageIds);
         // Add the message ID to the set of processed IDs
-        processedMessageIds.add(message.item_id);
+        processedMessageIds.add(message.fbid);
 
         // Save the processed message ID to storage (this is just an example)
         // In a real application, you would save this to a database or file

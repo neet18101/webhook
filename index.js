@@ -74,6 +74,7 @@ const handleIncomingMessage = async (
       console.log(mediaDetails?.media_type);
     }
   }
+  lastProcessedTimestamp = timestamp;
 };
 const getNewMessages = async () => {
   ig.state.generateDevice("heystak.io");
@@ -100,9 +101,9 @@ const getNewMessages = async () => {
           message.text || "",
           message.user_id,
           message.item_type,
-          message.media_share
+          message.media_share,
+          messageTimestamp
         );
-        lastProcessedTimestamp = messageTimestamp; // Update the last processed timestamp
       }
     }
   }

@@ -49,65 +49,66 @@ let lastProcessedTimestamp = 0;
 // const ig = new IgApiClient();
 console.log(processedMessageIds, "hello");
 
-// const handleIncomingMessage = async (
-//   threadId,
-//   messageId,
-//   text,
-//   userId,
-//   itemType,
-//   mediaDetails
-// ) => {
-//   if (processedMessageIds.has(messageId)) {
-//     return;
-//   }
+const handleIncomingMessage = async (
+  threadId,
+  messageId,
+  text,
+  userId,
+  itemType,
+  mediaDetails,
+  timestamp
+) => {
+  if (processedMessageIds.has(messageId)) {
+    return;
+  }
 
-//   processedMessageIds.add(messageId);
-//   console.log(processedMessageIds, "insideMessage", userId);
+  processedMessageIds.add(messageId);
+  console.log(processedMessageIds, "insideMessage", userId);
 
-//   if (itemType === "media_share" && mediaDetails) {
-//     console.log(`Media type: ${mediaDetails.media_type}`);
-//     if (mediaDetails.media_type === 1) {
-//       console.log(
-//         `Image URL: ${mediaDetails.image_versions2.candidates[0].url}`
-//       );
-//     } else {
-//       console.log(mediaDetails?.media_type);
-//     }
-//   }
-//   lastProcessedTimestamp = timestamp;
-// };
-// const getNewMessages = async () => {
-//   ig.state.generateDevice("heystak.io");
-//   console.log("IG_USERNAME:", "heystak.io");
-//   console.log("IG_PASSWORD:", "Heystak12!" ? "Loaded" : "Not Loaded");
+  if (itemType === "media_share" && mediaDetails) {
+    console.log(`Media type: ${mediaDetails.media_type}`);
+    if (mediaDetails.media_type === 1) {
+      console.log(
+        `Image URL: ${mediaDetails.image_versions2.candidates[0].url}`
+      );
+    } else {
+      console.log(mediaDetails?.media_type);
+    }
+  }
+  lastProcessedTimestamp = timestamp;
+};
+const getNewMessages = async () => {
+  ig.state.generateDevice("heystak.io");
+  console.log("IG_USERNAME:", "heystak.io");
+  console.log("IG_PASSWORD:", "Heystak12!" ? "Loaded" : "Not Loaded");
 
-//   const loggedInUser = await ig.account.login("heystak.io", "Heystak12!");
-//   botUserId = loggedInUser.pk;
+  const loggedInUser = await ig.account.login("heystak.io", "Heystak12!");
+  botUserId = loggedInUser.pk;
 
-//   const inboxFeed = ig.feed.directInbox();
-//   const threads = await inboxFeed.items();
+  const inboxFeed = ig.feed.directInbox();
+  const threads = await inboxFeed.items();
 
-//   for (const thread of threads) {
-//     const messages = thread.items.reverse(); // Process oldest to newest
-//     for (const message of messages) {
-//       const messageTimestamp = message.timestamp / 1000; // Convert to seconds if needed
-//       if (
-//         messageTimestamp > lastProcessedTimestamp &&
-//         message.user_id !== botUserId
-//       ) {
-//         await handleIncomingMessage(
-//           thread.thread_id,
-//           message.item_id,
-//           message.text || "",
-//           message.user_id,
-//           message.item_type,
-//           message.media_share,
-//           messageTimestamp
-//         );
-//       }
-//     }
-//   }
-// };
+  for (const thread of threads) {
+    const messages = thread.items.reverse(); // Process oldest to newest
+    for (const message of messages) {
+      const messageTimestamp = message.timestamp / 1000; // Convert to seconds if needed
+      if (
+        messageTimestamp > lastProcessedTimestamp &&
+        message.user_id !== botUserId
+      ) {
+        await handleIncomingMessage(
+          thread.thread_id,
+          message.item_id,
+          message.text || "",
+          message.user_id,
+          message.item_type,
+          message.media_share,
+          messageTimestamp
+        );
+      }
+    }
+  }
+};
 async function callAnotherApi(userData) {
   try {
     if (!isNaN(userData.lastMessage)) {
@@ -213,24 +214,22 @@ const inComingDetails = [];
 app.post("/webhook/incoming", async (req, res) => {
   try {
     const data = req.body;
-    // console.log(data[0]?.info?.message, data);
-    console.log(data)
-    // const userData = storeData(data);
-    // const check = await inComingDetails.find(
-    //   (obj) =>
-    //     obj.contact_id === userData.contact_id &&
-    //     obj.lastMessage === userData.lastMessage
-    // );
-    // const messageIdCheck = lastMessage
+    console.log(data[0]?.info?.message, data);
+    const userData = storeData(data);
+    const check = await inComingDetails.find(
+      (obj) =>
+        obj.contact_id === userData.contact_id &&
+        obj.lastMessage === userData.lastMessage
+    );
 
-    // // console.log(check, "neet", = userData, inComingDetails);
-    // if (check) {
-    //   return res.sendStatus(200);
-    // } else {
-    //   inComingDetails.push(userData);
-    //   await getNewMessages();
-    //   // await callAnotherApi(userData);
-    // }
+    // console.log(check, "neet", = userData, inComingDetails);
+    if (check) {
+      return res.sendStatus(200);
+    } else {
+      inComingDetails.push(userData);
+      await getNewMessages();
+      // await callAnotherApi(userData);
+    }
     // console.log(userData, "neet");
     // Call another API with the stored data
 

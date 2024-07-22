@@ -63,14 +63,8 @@ const getNewMessages = async () => {
   for (const thread of threads) {
     const messages = thread.items;
     for (const message of messages) {
-      if (
-        message.item_type == "media_share" &&
-        message?.media_type === 1
-      ) {
-        console.log("image url ", message?.image_versions2);
-      } else {
+      if (message.item_type === "media_share") {
         console.log(JSON.stringify(message?.image_versions2));
-        console.log("nothing found");
       }
 
       // console.log(message.item_type, message.media_share , "neetx");
